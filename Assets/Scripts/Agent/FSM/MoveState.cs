@@ -1,5 +1,4 @@
 ﻿using System;
-using Unity.MLAgents;
 using UnityEngine;
 
 public class MoveState : AgentState
@@ -7,12 +6,12 @@ public class MoveState : AgentState
     private Vector3 _lastPosition = Vector3.zero;
     public override bool IsFinished { get; protected set; }
 
-    public override void DoAction(Agent owner)
+    public override void DoAction(BasicAgent owner)
     {
         return;
     }
 
-    public override void DoAction(Agent owner, float[] vectorAction)
+    public override void DoAction(BasicAgent owner, float[] vectorAction)
     {
         var rBody = owner.GetComponent<Rigidbody>();
 
@@ -40,32 +39,32 @@ public class MoveState : AgentState
         IsFinished = true;
     }
 
-    public override void OnEnter(Agent owner)
+    public override void OnEnter(BasicAgent owner)
     {
         IsFinished = false;
     }
 
-    public override void OnExit(Agent owner)
+    public override void OnExit(BasicAgent owner)
     {
         return;
     }
 
-    public override void OnFixedUpdate(Agent owner)
+    public override void OnFixedUpdate(BasicAgent owner)
     {
         return;
     }
 
-    public override void OnUpdate(Agent owner)
+    public override void OnUpdate(BasicAgent owner)
     {
         return;
     }
 
     public override void SetAction(Action action)
     {
-        throw new NotImplementedException();
+        return;
     }
 
-    private void SetDirection(Agent owner)
+    private void SetDirection(BasicAgent owner)
     {
         var direction = (owner.transform.position - _lastPosition).normalized;
 

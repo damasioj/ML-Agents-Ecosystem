@@ -1,21 +1,25 @@
 ﻿using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class BasicAgent : Agent
+public abstract class BasicAgent : Agent
 {
-    public int maxInternalSteps;    
+    [HideInInspector] public UnityEvent<BasicAgent> onTaskDone;
+
+    public int maxInternalSteps;
+    private Vector3 previousPosition;
 
     #region Properties
-    [HideInInspector] public Rigidbody RigidBody { get; private set; }
-    [HideInInspector] public int InternalStepCount { get; private set; }
+    [HideInInspector] public Rigidbody Body { get; protected set; }
+    [HideInInspector] public int InternalStepCount { get; protected set; }    
     protected bool IsDoneCalled { get; set; }
-    protected Dictionary<State, AgentState> StateDictionary { get; set; }
-    public virtual BaseSource Target { get; set; }
+    protected Dictionary<AgentStateType, AgentState> StateDictionary { get; set; }
+    public virtual BaseTarget Target { get; set; }
     public virtual BaseStructure Goal { get; set; }
 
-    private State currentState;
-    public State CurrentState
+    private AgentStateType currentState;
+    public AgentStateType CurrentState
     {
         get
         {
@@ -33,7 +37,7 @@ public class BasicAgent : Agent
     }
     #endregion
 
-    void Start()
+    public BasicAgent()
     {
         InternalStepCount = 0;
         IsDoneCalled = false;
@@ -46,10 +50,10 @@ public class BasicAgent : Agent
 
     protected virtual void AssignStateDictionary()
     {
-        StateDictionary = new Dictionary<State, AgentState>()
+        StateDictionary = new Dictionary<AgentStateType, AgentState>()
         {
-            [State.Idle] = new IdleState(),
-            [State.Move] = new MoveState()
+            [AgentStateType.Idle] = new IdleState(),
+            [AgentStateType.Move] = new MoveState()
         };
     }
 
@@ -65,13 +69,25 @@ public class BasicAgent : Agent
         // agent is idle
         if (vectorAction[0] == 0 && vectorAction[1] == 0)
         {
-            CurrentState = State.Idle;
+            CurrentState = AgentStateType.Idle;
             return;
         }
 
         // agent is moving
-        CurrentState = State.Move;
+        CurrentState = AgentStateType.Move;
         StateDictionary[CurrentState].DoAction(this, vectorAction);
+    }
+
+    protected virtual void SetDirection()
+    {
+        if (transform.position != previousPosition)
+        {
+            var direction = (transform.position - previousPosition).normalized;
+            direction.y = 0;
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.15F);
+            previousPosition = transform.position;
+        }
     }
 
     public override void Heuristic(float[] actions)
@@ -84,4 +100,6 @@ public class BasicAgent : Agent
     {
         AddReward(value * -1);
     }
+
+    public abstract void UpdateTarget(IEnumerable<BaseTarget> baseTargets);
 }

@@ -1,13 +1,15 @@
 ﻿using System;
-using UnityEngine;
 
-public class IdleState : AgentState
+public class InteractState : AgentState
 {
-    public override bool IsFinished { get; protected set; } = true;
+    private Action actionToExecute;
+    private float counter = 0f;
+
+    public override bool IsFinished { get; protected set; }
 
     public override void SetAction(Action action)
     {
-        return;
+        actionToExecute = action;
     }
 
     public override void DoAction(BasicAgent owner)
@@ -23,13 +25,8 @@ public class IdleState : AgentState
     public override void OnEnter(BasicAgent owner)
     {
         IsFinished = false;
-        var rBody = owner.GetComponent<Rigidbody>();
-        if (rBody is object)
-        {
-            rBody.angularVelocity = Vector3.zero;
-            rBody.velocity = Vector3.zero;
-        }
-        IsFinished = true;
+        counter = owner.StepCount;
+        // todo : start animation
     }
 
     public override void OnExit(BasicAgent owner)
@@ -39,7 +36,12 @@ public class IdleState : AgentState
 
     public override void OnFixedUpdate(BasicAgent owner)
     {
-        return;
+        if (owner.StepCount - counter >= 50)
+        {
+            actionToExecute();
+            IsFinished = true;
+            owner.CurrentState = AgentStateType.Idle;
+        };
     }
 
     public override void OnUpdate(BasicAgent owner)

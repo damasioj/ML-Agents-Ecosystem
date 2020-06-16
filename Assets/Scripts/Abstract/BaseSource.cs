@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseSource : MonoBehaviour 
+public abstract class BaseSource : BaseTarget 
 {
+    public override bool IsValid { get => ResourceCount > 0; }
     public bool SourceHit { get; protected set; }
-    public Dictionary<string, float> BoundaryLimits { get; set; }
+    public Dictionary<string, float> BoundaryLimits { get; set; } // TODO : maybe refactor this
     public int ResourceCount { get; }
     public abstract Type GetResourceType();
     public abstract BaseResource GetResource();
@@ -13,7 +14,7 @@ public abstract class BaseSource : MonoBehaviour
 
     public virtual void Reset()
     {
-        gameObject.transform.localPosition =
+        Location =
             new Vector3
             (
                 UnityEngine.Random.Range(BoundaryLimits["-X"], BoundaryLimits["X"]),
@@ -22,21 +23,7 @@ public abstract class BaseSource : MonoBehaviour
             );
 
         SourceHit = false;
-    }
-
-    public virtual Vector3 Location
-    {
-        get
-        {
-            return gameObject.transform.position;
-        }
-        private set
-        {
-            gameObject.transform.position = value;
-        }
-    }
-
-    
+    }    
 }
 
 public class BaseSource<T> : BaseSource
