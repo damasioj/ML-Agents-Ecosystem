@@ -34,24 +34,25 @@ public class HaulerAgent : BasicAgent
         {
             base.Target = value;
             movableTarget = value as IMovable;
+            targetBody = Target.GetComponent<Rigidbody>();
         }
     }
-
-    public HaulerAgent() : base()
+    
+    private void Start()
     {
-        if (!(Target is IMovable))
+        if (!(Target is null || Target is IMovable))
         {
-            throw new System.Exception("Target provided to hauler agent is not IMovable!");
+            throw new Exception("Target provided to hauler agent is not IMovable!");
         }
 
-        lastTargetDistance = 0f;
-
-        targetBody = Target.GetComponent<Rigidbody>();
+        lastTargetDistance = 0f;        
         agentHead = GetComponentInChildren<SphereCollider>().gameObject;
 
         raycastsHit = new List<bool>() { false, false, false }; // refactor this
         obstacles = new List<GameObject>() { null, null, null };
     }
+
+    
 
     //private IList<T> InitializeListWithNull<T>(int amount)
     //{
@@ -67,12 +68,16 @@ public class HaulerAgent : BasicAgent
 
     void Update()
     {
-        float distance = ObjectHelper.EvaluateProximity(ref lastTargetDistance, Target.gameObject, Goal.gameObject);
-
-        if (distance > 0)
+        if (Target is object && Goal is object)
         {
-            InternalStepCount = StepCount;
-            AddReward(distance * 0.0001f);
+            float distance = ObjectHelper.EvaluateProximity(ref lastTargetDistance, Target.gameObject, Goal.gameObject);
+
+
+            if (distance > 0)
+            {
+                InternalStepCount = StepCount;
+                AddReward(distance * 0.0001f);
+            }
         }
 
         if (StepCount - InternalStepCount > maxInternalSteps && !IsDoneCalled)
@@ -109,16 +114,19 @@ public class HaulerAgent : BasicAgent
         sensor.AddObservation(Target.transform.position); //3
         sensor.AddObservation(targetBody.velocity); //3
         sensor.AddObservation(targetDimensions); //3
-        sensor.AddObservation(Target.transform.rotation); //3
-        sensor.AddObservation((int)movableTarget.Shape);
+        //sensor.AddObservation(Target.transform.rotation); //3
+        //sensor.AddObservation((int)movableTarget.Shape); //1
 
         // goal info
-        sensor.AddObservation(Goal.transform.position); //3
+        if (Goal is object) //3
+            sensor.AddObservation(Goal.transform.position);
+        else
+            sensor.AddObservation(Vector3.zero);
 
         // Agent data
         sensor.AddObservation(transform.position); //3
         sensor.AddObservation(Body.velocity); //3
-        sensor.AddObservation(targetRaycast);
+        sensor.AddObservation(targetRaycast); //1
 
         // obstacle info
         raycastsHit.ForEach(x => sensor.AddObservation(x)); // n * 1
@@ -189,7 +197,7 @@ public class HaulerAgent : BasicAgent
             IsDoneCalled = true;
             SetReward(3f);
             //EndEpisode();
-            onTaskDone?.Invoke(this);
+            OnTaskDone();
         }
     }
 

@@ -1,4 +1,4 @@
 ﻿public interface IMovable
 {
-    public ShapeType Shape { get; }
+    ShapeType Shape { get; }
 }

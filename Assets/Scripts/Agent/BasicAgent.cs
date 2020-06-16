@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// An extended abstract class based on the Unity.MLAgents.Agent class that provides basic core functions.
+/// All agents must inherit from this class.
+/// </summary>
 public abstract class BasicAgent : Agent
 {
-    [HideInInspector] public UnityEvent<BasicAgent> onTaskDone;
+    public event EventHandler TaskDone;
 
     public int maxInternalSteps;
 
@@ -42,8 +48,16 @@ public abstract class BasicAgent : Agent
     {
         InternalStepCount = 0;
         IsDoneCalled = false;
+    }
+
+    private void Awake()
+    {
+        Body = GetComponent<Rigidbody>();
+        CurrentState = AgentStateType.Idle;
         StartPosition = transform.position;
         PreviousPosition = StartPosition;
+        AssignStateDictionary();
+        OnTaskDone(); // force update of target and goal
     }
 
     void Update()
@@ -103,6 +117,11 @@ public abstract class BasicAgent : Agent
         }
     }
 
+    protected void OnTaskDone()
+    {
+        TaskDone?.Invoke(this, EventArgs.Empty);
+    }
+
     public override void Heuristic(float[] actions)
     {
         actions[0] = Input.GetAxis("Horizontal");
@@ -114,5 +133,19 @@ public abstract class BasicAgent : Agent
         AddReward(value * -1);
     }
 
+    /// <summary>
+    /// Makes the agent update their target based on the provided targets.
+    /// </summary>
+    /// <param name="baseTargets"></param>
     public abstract void UpdateTarget(IEnumerable<BaseTarget> baseTargets);
+    
+    /// <summary>
+    /// Makes the agent update their goal based on the provided structures.
+    /// </summary>
+    /// <param name="baseStructures"></param>
+    public virtual void UpdateGoal(IEnumerable<BaseStructure> baseStructures)
+    {
+        // when providing available goals, one could add logic here for every type of agent
+        Goal = baseStructures.FirstOrDefault();
+    }
 }

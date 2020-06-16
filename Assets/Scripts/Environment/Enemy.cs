@@ -5,21 +5,24 @@
 /// </summary>
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private AnimalAgent agent;
-    [SerializeField] private float range;
+    /// <summary>
+    /// The agent which the enemy should follow.
+    /// </summary>
+    [SerializeField] private BasicAgent agent;
     [SerializeField] private float maxSpeed;
-    [SerializeField] private float speedMultiplier;
+    [SerializeField] private float acceleration;
     private Rigidbody rBody;
+    private Vector3 startingPosition;
 
     public Vector3 Location
     {
         get
         {
-            return transform.localPosition;
+            return transform.position;
         }
         private set
         {
-            transform.localPosition = value;
+            transform.position = value;
         }
     }
 
@@ -28,9 +31,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rBody = GetComponent<Rigidbody>();
-        Location = new Vector3(Random.Range(-1f, 1f) * range,
-                                Location.y,
-                                Random.Range(-1f, 1f) * range);
+        startingPosition = transform.position;
     }
 
     void Update()
@@ -40,9 +41,7 @@ public class Enemy : MonoBehaviour
 
     public void Reset()
     {
-        Location = new Vector3(Random.Range(-1f, 1f) * range,
-                                Location.y,
-                                Random.Range(-1f, 1f) * range);
+        transform.position = startingPosition;
         rBody.velocity = Vector3.zero;
         rBody.angularVelocity = Vector3.zero;
     }
@@ -53,20 +52,20 @@ public class Enemy : MonoBehaviour
 
         if (agent.transform.localPosition.x > Location.x)
         {
-            x = speedMultiplier;
+            x = acceleration;
         }
         else
         {
-            x = -speedMultiplier;
+            x = -acceleration;
         }
 
         if (agent.transform.localPosition.z > Location.z)
         {
-            z = speedMultiplier;
+            z = acceleration;
         }
         else
         {
-            z = -speedMultiplier;
+            z = -acceleration;
         }
 
         Move(x, z);

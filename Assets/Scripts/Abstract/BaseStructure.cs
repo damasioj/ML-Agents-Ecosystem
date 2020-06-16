@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The structure class represent all constructed objects in the scene.
+/// This class is typically used as the goal for task-oriented agents, but could also be the target.
+/// </summary>
 public abstract class BaseStructure : MonoBehaviour
 {
-    public Dictionary<string, float> locationLimits { get; set; }
+    public Dictionary<string, float> locationLimits;
 
     public virtual void Reset()
     {
@@ -45,5 +49,4 @@ public abstract class BaseStructure : MonoBehaviour
     /// </summary>
     /// <returns>IDictionary<Type, int></returns>
     public abstract IDictionary<Type, int> GetResourcesRequired();
-    //public abstract void SetResourceRequirements(IDictionary<Type, int> requirements);
 }

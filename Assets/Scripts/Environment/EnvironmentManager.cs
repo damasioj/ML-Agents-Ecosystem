@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Responsible for managing a single environment in the scene.
+/// Each environment only manages information of the agents, targets, sources and structures in its children or associated through the inspector.
+/// </summary>
 public class EnvironmentManager : MonoBehaviour
 {
     public List<BasicAgent> agents;
@@ -13,7 +17,7 @@ public class EnvironmentManager : MonoBehaviour
     private List<BaseStructure> Structures { get; set; }
     #endregion
 
-    void Start()
+    void Awake()
     {
         Targets = GetComponentsInChildren<BaseTarget>().ToList();
         Sources = GetComponentsInChildren<BaseSource>().ToList();
@@ -21,7 +25,9 @@ public class EnvironmentManager : MonoBehaviour
         
         foreach (var agent in agents)
         {
-            agent.onTaskDone.AddListener(OnTaskDone);
+            agent.TaskDone += OnTaskDone;
+            agent.UpdateTarget(Targets);
+            agent.UpdateGoal(GetPendingStructures());
         }
     }
 
@@ -33,8 +39,17 @@ public class EnvironmentManager : MonoBehaviour
         return Structures.Where(s => !s.IsComplete);
     }
 
-    private void OnTaskDone(BasicAgent sender)
+    /// <summary>
+    /// Informs the environment when the task has finished and updates the finished agents target and goal.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnTaskDone(object sender, EventArgs e)
     {
-        // TODO 
+        if (sender is BasicAgent callingAgent)
+        {
+            callingAgent.UpdateTarget(Targets);
+            callingAgent.UpdateGoal(GetPendingStructures());
+        }
     }
 }

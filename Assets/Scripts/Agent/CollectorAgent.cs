@@ -10,6 +10,11 @@ public class CollectorAgent : BasicAgent
     private bool IsAtResource { get; set; }
     new public BaseSource Target { get; set; }
 
+    void Start()
+    {
+        AssignStateDictionary();
+    }
+
     protected override void AssignStateDictionary()
     {
         StateDictionary = new Dictionary<AgentStateType, AgentState>()
@@ -144,7 +149,7 @@ public class CollectorAgent : BasicAgent
 
         if (!isResourceRequired)
         {
-            onTaskDone?.Invoke(this);
+            OnTaskDone();
         }
     }
 

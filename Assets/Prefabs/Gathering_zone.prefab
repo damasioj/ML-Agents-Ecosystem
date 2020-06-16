@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 8707595899689775832}
   - component: {fileID: 6612739522713917865}
   - component: {fileID: 5204984671044693855}
+  - component: {fileID: 5121069178656585654}
   m_Layer: 0
   m_Name: Tree_placeholder
-  m_TagString: Untagged
+  m_TagString: target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,6 +94,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5121069178656585654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2438919622576705099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccdadad9bfb5dc84582bc0ddcc88ca85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2498333427362084711
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +168,7 @@ GameObject:
   - component: {fileID: 4361430511806276803}
   m_Layer: 0
   m_Name: Stone_placeholder
-  m_TagString: Untagged
+  m_TagString: target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -258,9 +271,10 @@ GameObject:
   - component: {fileID: 6865112570486072092}
   - component: {fileID: 4680825168320564255}
   - component: {fileID: 6600662667112848540}
+  - component: {fileID: 1229922708341293430}
   m_Layer: 0
   m_Name: Goal_placeholder
-  m_TagString: Untagged
+  m_TagString: goal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -339,3 +353,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1229922708341293430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8303528904402140928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13cf3a4a5e0477149a1118ba4708d797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  woodRequired: 100
+  stoneRequired: 100

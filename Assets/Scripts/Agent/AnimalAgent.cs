@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.MLAgents.Sensors;
 using UnityEngine;
 
 public class AnimalAgent : BasicAgent
 {
-    [SerializeField] Enemy enemy;
+    [SerializeField] Enemy enemy; // TODO : divert to environment manager
     public float energy;
 
     
@@ -13,10 +14,14 @@ public class AnimalAgent : BasicAgent
     private bool HitTarget { get; set; }
 
     public AnimalAgent() : base()
-    {
-        InitialEnergy = energy;
+    {        
         HitTarget = false;
         IsKilled = false;
+    }
+
+    private void Start()
+    {
+        InitialEnergy = energy;
     }
 
     void FixedUpdate()
@@ -47,6 +52,27 @@ public class AnimalAgent : BasicAgent
                 }
                 break;
         }
+    }
+
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        // Target
+        sensor.AddObservation(Target.transform.localPosition); // 3
+
+        //sensor.AddObservation(cons.IsConsumed);
+        sensor.AddObservation(false); // TODO : TEMPORARY 
+
+        // agent
+        sensor.AddObservation(transform.localPosition); // 3
+        sensor.AddObservation(Body.velocity.x); // 1
+        sensor.AddObservation(Body.velocity.z); // 1
+
+        // Energy
+        sensor.AddObservation(energy);
+
+        // enemy
+        sensor.AddObservation(enemy.Location); // 3
+        sensor.AddObservation(enemy.Velocity); // 3
     }
 
     public override void UpdateTarget(IEnumerable<BaseTarget> baseTargets)
