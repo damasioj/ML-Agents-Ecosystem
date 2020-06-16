@@ -37,7 +37,7 @@ public class HaulerAgent : BasicAgent
         }
     }
 
-    public HaulerAgent()
+    public HaulerAgent() : base()
     {
         if (!(Target is IMovable))
         {

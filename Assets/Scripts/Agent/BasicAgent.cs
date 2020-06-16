@@ -8,15 +8,16 @@ public abstract class BasicAgent : Agent
     [HideInInspector] public UnityEvent<BasicAgent> onTaskDone;
 
     public int maxInternalSteps;
-    private Vector3 previousPosition;
 
     #region Properties
-    [HideInInspector] public Rigidbody Body { get; protected set; }
-    [HideInInspector] public int InternalStepCount { get; protected set; }    
-    protected bool IsDoneCalled { get; set; }
-    protected Dictionary<AgentStateType, AgentState> StateDictionary { get; set; }
     public virtual BaseTarget Target { get; set; }
     public virtual BaseStructure Goal { get; set; }
+    public Rigidbody Body { get; protected set; }
+    public int InternalStepCount { get; protected set; }    
+    protected bool IsDoneCalled { get; set; }
+    protected Dictionary<AgentStateType, AgentState> StateDictionary { get; set; }
+    private Vector3 PreviousPosition { get; set; }
+    private Vector3 StartPosition { get; set; }
 
     private AgentStateType currentState;
     public AgentStateType CurrentState
@@ -37,15 +38,27 @@ public abstract class BasicAgent : Agent
     }
     #endregion
 
-    public BasicAgent()
+    public BasicAgent() : base()
     {
         InternalStepCount = 0;
         IsDoneCalled = false;
+        StartPosition = transform.position;
+        PreviousPosition = StartPosition;
     }
 
     void Update()
     {
         StateDictionary[CurrentState].OnUpdate(this);
+    }
+
+    public virtual void Reset()
+    {
+        IsDoneCalled = false;
+        InternalStepCount = 0;
+        Body.angularVelocity = Vector3.zero;
+        Body.velocity = Vector3.zero;
+        transform.position = StartPosition;
+        PreviousPosition = StartPosition;
     }
 
     protected virtual void AssignStateDictionary()
@@ -80,13 +93,13 @@ public abstract class BasicAgent : Agent
 
     protected virtual void SetDirection()
     {
-        if (transform.position != previousPosition)
+        if (transform.position != PreviousPosition)
         {
-            var direction = (transform.position - previousPosition).normalized;
+            var direction = (transform.position - PreviousPosition).normalized;
             direction.y = 0;
 
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 0.15F);
-            previousPosition = transform.position;
+            PreviousPosition = transform.position;
         }
     }
 
