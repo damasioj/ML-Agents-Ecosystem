@@ -19,5 +19,5 @@ The following are the goals of this project:
 
 To run this environment, you will need:
 - Python 3.6.1 or greater
-	- mlagents version 1.0.2 
+	- mlagents version 0.16.1
 - Unity 2019.2.0f1 or greater

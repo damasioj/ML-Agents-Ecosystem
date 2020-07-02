@@ -3,6 +3,9 @@ using System.Linq;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 
+/// <summary>
+/// Represents an agent with the goal of collecting resources and bringing it to a defined goal.
+/// </summary>
 public class CollectorAgent : BasicAgent
 {    
     private BaseResource resource;
@@ -72,9 +75,6 @@ public class CollectorAgent : BasicAgent
         
         if (!Goal.IsComplete)
         {
-            Body.angularVelocity = Vector3.zero;
-            Body.velocity = Vector3.zero;
-            transform.localPosition = new Vector3(0, 1, 0);
             CurrentState = AgentStateType.Idle;
         }
 
@@ -88,13 +88,13 @@ public class CollectorAgent : BasicAgent
         sensor.AddObservation(Target.Location.z); //1
 
         // goal info
-        sensor.AddObservation(Goal.transform.localPosition.x); //1
-        sensor.AddObservation(Goal.transform.localPosition.z); //1
+        sensor.AddObservation(Goal.transform.position.x); //1
+        sensor.AddObservation(Goal.transform.position.z); //1
 
         // Agent data
         sensor.AddObservation(HasResource); //1
-        sensor.AddObservation(transform.localPosition.x); //1
-        sensor.AddObservation(transform.localPosition.z); //1
+        sensor.AddObservation(transform.position.x); //1
+        sensor.AddObservation(transform.position.z); //1
         sensor.AddObservation(Body.velocity.x); //1
         sensor.AddObservation(Body.velocity.z); //1
         sensor.AddObservation((int)CurrentState); // 1
@@ -127,7 +127,7 @@ public class CollectorAgent : BasicAgent
 
     private void TakeResource()
     {
-        if (IsAtResource && !HasResource)
+        if (!HasResource)
         {
             resource = Target.GetResource();
 

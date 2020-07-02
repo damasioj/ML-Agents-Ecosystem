@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This is a basic enemy only for demonstration purposes.
+/// A basic enemy only for demonstration purposes.
 /// </summary>
 public class Enemy : MonoBehaviour
 {
     /// <summary>
-    /// The agent which the enemy should follow.
+    /// The agent which the enemy follows.
     /// </summary>
     [SerializeField] private BasicAgent agent;
     [SerializeField] private float maxSpeed;
@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
         startingPosition = transform.position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         UpdateLocation();
     }
@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
 
         if (x != 0 && z != 0)
         {
-            rBody.AddForce(new Vector3(x, 0, z));
+            rBody.AddTorque(new Vector3(x, 0, z), ForceMode.Acceleration);
         }
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Collection for managing environment resources.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">Resource type</typeparam>
 public class ResourceCollection<T> : ICollection
     where T : new()
 {

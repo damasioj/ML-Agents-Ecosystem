@@ -1,5 +1,10 @@
 ﻿using System;
 
+/// <summary>
+/// Holds functions related to the agent's FSM.
+/// The FSM is not actually used for the agent's AI, it's only used for executing actions and animations.
+/// States can be triggered based on the agent's state or through an action given by the model.
+/// </summary>
 public abstract class AgentState
 {
     public abstract bool IsFinished { get; protected set; }

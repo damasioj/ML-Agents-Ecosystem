@@ -5,7 +5,7 @@ using UnityEngine;
 
 /// <summary>
 /// Responsible for managing a single environment in the scene.
-/// Each environment only manages information of the agents, targets, sources and structures in its children or associated through the inspector.
+/// Each environment only manages information of the agents, targets, sources and structures in its children or that are associated through the inspector.
 /// </summary>
 public class EnvironmentManager : MonoBehaviour
 {

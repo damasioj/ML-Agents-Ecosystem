@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents a "source" in the environment - an object that holds other objects.
+/// Sources hold a collection of resources. Taking items from the source removes it from the collection.
+/// This is used to represent a physical transfer of objects and reduce chances of duplication bugs.
+/// </summary>
 public abstract class BaseSource : BaseTarget 
 {
+    [SerializeField] private int resourceCount;
+    public int ResourceCount => resourceCount;
     public override bool IsValid { get => ResourceCount > 0; }
     public bool SourceHit { get; protected set; }
     public Dictionary<string, float> BoundaryLimits { get; set; } // TODO : maybe refactor this
-    public int ResourceCount { get; }
     public abstract Type GetResourceType();
     public abstract BaseResource GetResource();
     public abstract void SetResourceAmount(Dictionary<Type, int> resourceData);

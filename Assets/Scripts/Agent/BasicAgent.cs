@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 /// <summary>
 /// An extended abstract class based on the Unity.MLAgents.Agent class that provides basic core functions.
-/// All agents must inherit from this class.
+/// Parent class for all agents within this project.
 /// </summary>
 public abstract class BasicAgent : Agent
 {
@@ -44,37 +44,35 @@ public abstract class BasicAgent : Agent
     }
     #endregion
 
-    public BasicAgent() : base()
-    {
-        InternalStepCount = 0;
-        IsDoneCalled = false;
-    }
-
-    private void Awake()
+    public override void Initialize()
     {
         Body = GetComponent<Rigidbody>();
         CurrentState = AgentStateType.Idle;
         StartPosition = transform.position;
         PreviousPosition = StartPosition;
         AssignStateDictionary();
+        InternalStepCount = 0;
+        IsDoneCalled = false;
         OnTaskDone(); // force update of target and goal
     }
 
     void Update()
     {
         StateDictionary[CurrentState].OnUpdate(this);
+
+        if (maxInternalSteps > 0 && StepCount - InternalStepCount > maxInternalSteps && !IsDoneCalled)
+        {
+            IsDoneCalled = true;
+            SubtractReward(0.1f);
+            Debug.Log($"Reward: {GetCumulativeReward()}");
+            Debug.Log($"No point earned in last {maxInternalSteps} steps. Restarting ...");
+            EndEpisode();
+        }
     }
 
-    public virtual void Reset()
-    {
-        IsDoneCalled = false;
-        InternalStepCount = 0;
-        Body.angularVelocity = Vector3.zero;
-        Body.velocity = Vector3.zero;
-        transform.position = StartPosition;
-        PreviousPosition = StartPosition;
-    }
-
+    /// <summary>
+    /// The states that the agent has.
+    /// </summary>
     protected virtual void AssignStateDictionary()
     {
         StateDictionary = new Dictionary<AgentStateType, AgentState>()
@@ -87,8 +85,12 @@ public abstract class BasicAgent : Agent
     public override void OnEpisodeBegin()
     {
         SetReward(0f);
-        InternalStepCount = 0;
         IsDoneCalled = false;
+        InternalStepCount = 0;
+        Body.angularVelocity = Vector3.zero;
+        Body.velocity = Vector3.zero;
+        transform.position = StartPosition;
+        PreviousPosition = StartPosition;
     }
 
     protected virtual void Move(float[] vectorAction)
@@ -117,6 +119,9 @@ public abstract class BasicAgent : Agent
         }
     }
 
+    /// <summary>
+    /// Signals to the environment that the agent finished its current task.
+    /// </summary>
     protected void OnTaskDone()
     {
         TaskDone?.Invoke(this, EventArgs.Empty);
@@ -136,13 +141,13 @@ public abstract class BasicAgent : Agent
     /// <summary>
     /// Makes the agent update their target based on the provided targets.
     /// </summary>
-    /// <param name="baseTargets"></param>
+    /// <param name="baseTargets">Targets</param>
     public abstract void UpdateTarget(IEnumerable<BaseTarget> baseTargets);
     
     /// <summary>
     /// Makes the agent update their goal based on the provided structures.
     /// </summary>
-    /// <param name="baseStructures"></param>
+    /// <param name="baseStructures">Structures</param>
     public virtual void UpdateGoal(IEnumerable<BaseStructure> baseStructures)
     {
         // when providing available goals, one could add logic here for every type of agent

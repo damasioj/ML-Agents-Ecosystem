@@ -52,7 +52,6 @@ public class HouseStructure : BaseStructure
         }
 
         // ensure the source object is null to avoid duplication
-        // need to find better solution
         if (resource is object)
         {
             resource = null;

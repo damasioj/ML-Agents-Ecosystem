@@ -4,6 +4,10 @@ using System.Linq;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 
+/// <summary>
+/// Represents an agent with the goal of physically moving an object to a target location in the scene.
+/// Uses a number of ray casts to perceive the environment.
+/// </summary>
 public class HaulerAgent : BasicAgent
 {
     // agent
@@ -72,21 +76,11 @@ public class HaulerAgent : BasicAgent
         {
             float distance = ObjectHelper.EvaluateProximity(ref lastTargetDistance, Target.gameObject, Goal.gameObject);
 
-
             if (distance > 0)
             {
                 InternalStepCount = StepCount;
                 AddReward(distance * 0.0001f);
             }
-        }
-
-        if (StepCount - InternalStepCount > maxInternalSteps && !IsDoneCalled)
-        {
-            IsDoneCalled = true;
-            SubtractReward(0.1f);
-            Debug.Log($"Reward: {GetCumulativeReward()}");
-            Debug.Log($"No point earned in last {maxInternalSteps} steps. Restarting ...");
-            EndEpisode();
         }
     }
 
@@ -97,15 +91,10 @@ public class HaulerAgent : BasicAgent
 
     public override void OnEpisodeBegin()
     {
-        SetReward(0f);
-
-        Body.angularVelocity = Vector3.zero;
-        Body.velocity = Vector3.zero;
-
+        base.OnEpisodeBegin();
+        
         targetDimensions = ObjectHelper.GetDimensions(Target.gameObject);
         lastTargetDistance = 0f;
-        InternalStepCount = StepCount;
-        IsDoneCalled = false;
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -188,7 +177,7 @@ public class HaulerAgent : BasicAgent
     }
 
     /// <summary>
-    /// Used by exetrnal sources to mark that the agent finished the task.
+    /// Called from the goal to mark that the agent finished the task.
     /// </summary>
     public void MarkTaskDone()
     {
