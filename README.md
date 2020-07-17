@@ -13,6 +13,9 @@ The project uses Unity ML-Agents to train agents.
 The following are the goals of this project:
 
 - [ ] Integrate agents into environment without requiring retraining
+	- [x] Resource Collector Agent
+	- [ ] Animal Agent
+	- [ ] Hauler Agent
 - [ ] Adding new objects to the environments (i.e. targets) and having agents interact with them as required
 
 # Requirements
