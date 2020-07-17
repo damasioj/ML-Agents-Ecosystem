@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccdadad9bfb5dc84582bc0ddcc88ca85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  range: 50
   resourceCount: 3
 --- !u!1 &2498333427362084711
 GameObject:
@@ -260,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca8201e3c3f4244282db7a206c52b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  range: 50
   resourceCount: 3
 --- !u!1 &8303528904402140928
 GameObject:

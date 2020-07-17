@@ -9,13 +9,19 @@ using UnityEngine;
 /// </summary>
 public abstract class BaseSource : BaseTarget 
 {
+    /// <summary>
+    /// The range (X and Z) at which the source can spawn on the map.
+    /// </summary>
+    [SerializeField] private float range;
+    /// <summary>
+    /// The amount of resources this source has when it spawns.
+    /// </summary>
     [SerializeField] private int resourceCount;
     public int ResourceCount => resourceCount;
-    public override bool IsValid { get => ResourceCount > 0; }
-    public bool SourceHit { get; protected set; }
-    public Dictionary<string, float> BoundaryLimits { get; set; } // TODO : maybe refactor this
+    public abstract override bool IsValid { get; }
+    public bool SourceHit { get; protected set; }    
     public abstract Type GetResourceType();
-    public abstract BaseResource GetResource();
+    public abstract BaseResource TakeResource();
     public abstract void SetResourceAmount(Dictionary<Type, int> resourceData);
 
     public virtual void Reset()
@@ -23,9 +29,9 @@ public abstract class BaseSource : BaseTarget
         Location =
             new Vector3
             (
-                UnityEngine.Random.Range(BoundaryLimits["-X"], BoundaryLimits["X"]),
+                UnityEngine.Random.Range(range * -1, range),
                 1f,
-                UnityEngine.Random.Range(BoundaryLimits["-Z"], BoundaryLimits["Z"])
+                UnityEngine.Random.Range(range * -1, range)
             );
 
         SourceHit = false;
@@ -35,11 +41,14 @@ public abstract class BaseSource : BaseTarget
 public class BaseSource<T> : BaseSource
     where T : new()
 {
-    protected ResourceCollection<T> Resources { get; set; }    
+    protected ResourceCollection<T> Resources { get; set; }
+
+    public override bool IsValid => Resources.Count > 0;
 
     private void Awake()
     {
         SourceHit = false;
+        Resources = new ResourceCollection<T>(ResourceCount);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -52,7 +61,7 @@ public class BaseSource<T> : BaseSource
         return typeof(T);
     }
 
-    public override BaseResource GetResource()
+    public override BaseResource TakeResource()
     {
         return Resources.Take() as BaseResource;
     }

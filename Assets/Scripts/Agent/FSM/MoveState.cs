@@ -14,6 +14,7 @@ public class MoveState : AgentState
     public override void DoAction(BasicAgent owner, float[] vectorAction)
     {
         var rBody = owner.GetComponent<Rigidbody>();
+        var scale = owner.gameObject.transform.localScale.x;
 
         if (rBody is object)
         {
@@ -30,7 +31,7 @@ public class MoveState : AgentState
                 controlSignal.z = 0;
             }
 
-            rBody.AddForce(new Vector3(controlSignal.x * 750, 0, controlSignal.z * 750));
+            rBody.AddForce(new Vector3(controlSignal.x * owner.speed * scale, 0, controlSignal.z * owner.speed * scale));
         }
 
         SetDirection(owner);

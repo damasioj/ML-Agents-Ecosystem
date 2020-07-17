@@ -104,6 +104,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7858602276320453784}
     m_Modifications:
+    - target: {fileID: 1229922708341293430, guid: 59b21029220a64f44a3fd3faca341d68,
+        type: 3}
+      propertyPath: woodRequired
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1229922708341293430, guid: 59b21029220a64f44a3fd3faca341d68,
+        type: 3}
+      propertyPath: stoneRequired
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2498333427362084711, guid: 59b21029220a64f44a3fd3faca341d68,
         type: 3}
       propertyPath: m_Name
@@ -183,6 +193,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Animal_zone
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580040818892238572, guid: a7362beaca795bb4e8529f774d8d567d,
+        type: 3}
+      propertyPath: range
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7668580507707804078, guid: a7362beaca795bb4e8529f774d8d567d,
         type: 3}

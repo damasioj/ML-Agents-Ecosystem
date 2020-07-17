@@ -12,7 +12,7 @@ public abstract class BaseStructure : MonoBehaviour
 
     public virtual void Reset()
     {
-        gameObject.transform.localPosition =
+        gameObject.transform.position =
             new Vector3
             (
                 UnityEngine.Random.Range(locationLimits["-X"], locationLimits["X"]),

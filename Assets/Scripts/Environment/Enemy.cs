@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
     {
         float x, z;
 
-        if (agent.transform.localPosition.x > Location.x)
+        if (agent.transform.position.x > Location.x)
         {
             x = acceleration;
         }
@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
             x = -acceleration;
         }
 
-        if (agent.transform.localPosition.z > Location.z)
+        if (agent.transform.position.z > Location.z)
         {
             z = acceleration;
         }
@@ -78,7 +78,8 @@ public class Enemy : MonoBehaviour
 
         if (x != 0 && z != 0)
         {
-            rBody.AddTorque(new Vector3(x, 0, z), ForceMode.Acceleration);
+            //rBody.AddTorque(new Vector3(x, 0, z), ForceMode.Acceleration);
+            rBody.velocity += new Vector3(x, 0, z);
         }
     }
 }

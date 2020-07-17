@@ -144,6 +144,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   maxInternalSteps: 0
+  speed: 50
 --- !u!1 &671075550
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +558,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   maxInternalSteps: 0
+  speed: 0
   enemy: {fileID: 1412991404}
   energy: 0
   targets: []
@@ -738,6 +740,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   maxInternalSteps: 0
+  speed: 0
 --- !u!1001 &997863428282165445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -822,17 +825,17 @@ PrefabInstance:
     - target: {fileID: 1764907877719399626, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.72
+      value: -8.51
       objectReference: {fileID: 0}
     - target: {fileID: 1764907877719399626, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.56
+      value: 1.55
       objectReference: {fileID: 0}
     - target: {fileID: 1764907877719399626, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.67
+      value: 6.58
       objectReference: {fileID: 0}
     - target: {fileID: 1764907877719399626, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
@@ -883,7 +886,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: e1a640066ddca884b9c360db10c4e194,
+      objectReference: {fileID: 5022602860645237092, guid: 3dd5d8686d97a6448bf5628fac33c136,
         type: 3}
     - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
@@ -892,28 +895,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
-      propertyPath: m_BrainParameters.VectorActionSpaceType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
-        type: 3}
-      propertyPath: m_BrainParameters.VectorActionSize.Array.data[0]
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
-        type: 3}
       propertyPath: m_BehaviorName
       value: CollectorBehavior
       objectReference: {fileID: 0}
     - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
-      propertyPath: TeamId
+      propertyPath: m_BrainParameters.VectorActionSize.Array.data[0]
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
+    - target: {fileID: 7166365825995574872, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
-      propertyPath: m_BehaviorType
-      value: 0
+      propertyPath: DecisionPeriod
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8700185949500484595, guid: bcb79990e8932dc498a901e1d9d6618e,
+        type: 3}
+      propertyPath: m_Drag
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcb79990e8932dc498a901e1d9d6618e, type: 3}
@@ -933,6 +931,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 2802255080399212539, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2802255080399212539, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.71
       objectReference: {fileID: 0}
     - target: {fileID: 3296300695091944115, guid: 9ff728c4dca46e149ab9ab40863b8bab,
         type: 3}
@@ -963,6 +971,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Plane
+      objectReference: {fileID: 0}
+    - target: {fileID: 5131852184182744860, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5237524417958870293, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -7.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5789989637365574247, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 6096064225343378655, guid: 9ff728c4dca46e149ab9ab40863b8bab,
         type: 3}

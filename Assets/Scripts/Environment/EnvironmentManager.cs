@@ -40,7 +40,7 @@ public class EnvironmentManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Informs the environment when the task has finished and updates the finished agents target and goal.
+    /// Informs the environment when the task has finished and updates the finished agent's target and goal.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>

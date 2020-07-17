@@ -14,6 +14,7 @@ public abstract class BasicAgent : Agent
     public event EventHandler TaskDone;
 
     public int maxInternalSteps;
+    public float speed;
 
     #region Properties
     public virtual BaseTarget Target { get; set; }
@@ -68,6 +69,11 @@ public abstract class BasicAgent : Agent
             Debug.Log($"No point earned in last {maxInternalSteps} steps. Restarting ...");
             EndEpisode();
         }
+    }
+
+    void FixedUpdate()
+    {
+        StateDictionary[CurrentState].OnFixedUpdate(this);
     }
 
     /// <summary>

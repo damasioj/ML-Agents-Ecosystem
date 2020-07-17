@@ -129,7 +129,7 @@ public class CollectorAgent : BasicAgent
     {
         if (!HasResource)
         {
-            resource = Target.GetResource();
+            resource = Target.TakeResource();
 
             if (resource is object)
             {
