@@ -2,8 +2,11 @@
 
 public class FoodSource : BaseSource<BambooResource>
 {
-    [HideInInspector] public bool IsConsumed => hp <= 0;
-    public int hp;
+    /// <summary>
+    /// The amount of energy that this food source provides when consumed.
+    /// </summary>
+    [SerializeField] protected float energyValue;
+    [HideInInspector] public bool IsConsumed => ResourceCount <= 0;
 
     private void Awake()
     {
@@ -13,5 +16,15 @@ public class FoodSource : BaseSource<BambooResource>
     private void OnTriggerEnter(Collider other)
     {
         SourceHit = true;
+    }
+
+    public float Consume(int value)
+    {
+        for (int i = 0; i < value; i++)
+        {
+            TakeResource();
+        }
+
+        return energyValue;
     }
 }

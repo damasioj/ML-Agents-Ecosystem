@@ -17,7 +17,14 @@ public static class ObjectHelper
         return Vector3.zero;
     }
 
-    public static float EvaluateProximity(ref float previousDistance, GameObject firstObject, GameObject secondObject)
+    /// <summary>
+    /// Returns the distance difference based on the current and a previous distance of two objects.
+    /// </summary>
+    /// <param name="previousDistance">Last distance recorded</param>
+    /// <param name="firstObject">First object to compare</param>
+    /// <param name="secondObject">Second object to compare</param>
+    /// <returns></returns>
+    public static float GetDistanceDelta(ref float previousDistance, GameObject firstObject, GameObject secondObject)
     {
         if (previousDistance == 0f)
         {
@@ -34,5 +41,16 @@ public static class ObjectHelper
         }
 
         return 0f;
+    }
+
+    /// <summary>
+    /// Gets the distance between two game objects.
+    /// </summary>
+    /// <param name="firstObject">First object to compare</param>
+    /// <param name="secondObject">Second object to compare</param>
+    /// <returns></returns>
+    public static float GetDistance(GameObject firstObject, GameObject secondObject)
+    {
+        return Vector3.Distance(firstObject.transform.position, secondObject.transform.position);
     }
 }

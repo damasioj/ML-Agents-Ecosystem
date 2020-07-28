@@ -10,14 +10,32 @@ using UnityEngine;
 /// </summary>
 public class AnimalAgent : BasicAgent
 {
-    [SerializeField] Enemy enemy; // TODO : divert to environment manager
-    public float energy;    
-    private float InitialEnergy { get; set; }
+    [SerializeField] Enemy enemy; // TODO : divert to environment manager    
+    /// <summary>
+    /// Amount of energy the animal begins with.
+    /// </summary>
+    public float initialEnergy;
+
+    private float _energy;
+    protected float Energy
+    {
+        get
+        {
+            return initialEnergy;
+        }
+        set
+        {
+            _energy += value;
+
+            if (_energy > initialEnergy)
+            {
+                _energy = initialEnergy;
+            }
+        }
+    }
     private bool IsKilled { get; set; }
     private bool HitTarget { get; set; }
-
-    // target data
-    public List<BaseTarget> targets;
+    new public FoodSource Target { get; set; } // To reduce conversion costs when getting data from FoodSource
 
     private bool hitBoundary;
     private Rigidbody rBody;
@@ -28,7 +46,7 @@ public class AnimalAgent : BasicAgent
 
     private void Start()
     {
-        InitialEnergy = energy;
+        Energy = initialEnergy;
         HitTarget = false;
         IsKilled = false;
         raycastHit = false;
@@ -49,37 +67,24 @@ public class AnimalAgent : BasicAgent
         if (!IsDoneCalled)
         {
             // check if agent died or hit a boundary and reset episode
-            if (IsKilled)
-            {
-                IsDoneCalled = true;
-                animator.SetInteger("AnimIndex", 2);
-                animator.SetTrigger("Next");
-                EndEpisode();
-            }
+            //if (IsKilled)
+            //{
+            //    IsDoneCalled = true;
+            //    animator.SetInteger("AnimIndex", 2);
+            //    animator.SetTrigger("Next");
+            //    EndEpisode();
+            //}
 
             // if agent is at target, consume it
-            //if (activeTarget is IConsumable cons)
-            //{
-            //    if (!cons.IsConsumed)
-            //    {
-            //        bool isConsumed = cons.Consume(1f);
+            if (HitTarget && Target is object)
+            {
+                Energy += Target.Consume(1);
 
-            //        energy += 10;
-            //        AddReward(0.01f);
-            //        Debug.Log($"Current Reward: {GetCumulativeReward()}");
-
-            //        if (energy > InitialEnergy)
-            //        {
-            //            energy = InitialEnergy;
-            //        }
-
-            //        if (isConsumed && targets.Cast<FoodSource>().All(t => t.IsConsumed))
-            //        {
-            //            isDoneCalled = true;
-            //            EndEpisode();
-            //        }
-            //    }
-            //}
+                if (Target.IsConsumed)
+                {
+                    OnTaskDone();
+                }
+            }
         }
 
         VerifyRaycast();
@@ -98,7 +103,6 @@ public class AnimalAgent : BasicAgent
         {
             case "food":
                 HitTarget = true;
-                Target = other.gameObject.GetComponent<BaseTarget>();
                 break;
             case "enemy":
                 if (!IsKilled)
@@ -113,42 +117,55 @@ public class AnimalAgent : BasicAgent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // target
-        targets.ForEach(t => sensor.AddObservation(t.transform.position)); // n * 3
-        targets.Cast<FoodSource>().ToList().ForEach(t => sensor.AddObservation(t.IsConsumed)); // n * 1
-        targets.Cast<FoodSource>().ToList().ForEach(t => sensor.AddObservation(t.hp)); // n * 1
-        sensor.AddObservation(Target is object); // 1
+        if (!IsDoneCalled)
+        {
+            // target
+            if (Target is object) // if there is an existing food source nearby
+            {
+                sensor.AddObservation(Target.transform.position); // 3
+                sensor.AddObservation(HitTarget); // 1
+                sensor.AddObservation(Target.ResourceCount); // 1
+            }
+            else
+            {
+                sensor.AddObservation(Vector3.zero); // 3
+                sensor.AddObservation(false); // 1
+                sensor.AddObservation(0); // 1
+            }
 
-        // agent
-        sensor.AddObservation(transform.position); // 3
-        sensor.AddObservation(rBody.velocity.x); // 1
-        sensor.AddObservation(rBody.velocity.z); // 1
-        sensor.AddObservation(raycastHit); // 1
-        sensor.AddObservation(energy); // 1
+            // agent
+            sensor.AddObservation(transform.position.x); // 1
+            sensor.AddObservation(transform.position.z); // 1
+            sensor.AddObservation(rBody.velocity.x); // 1
+            sensor.AddObservation(rBody.velocity.z); // 1
+            sensor.AddObservation(raycastHit); // 1
+            sensor.AddObservation(Energy); // 1
 
-        // enemy
-        sensor.AddObservation(enemy.transform.position); // 3
-        sensor.AddObservation(enemy.Velocity); // 3
+            // enemy
+            sensor.AddObservation(enemy.transform.position.x); // 1
+            sensor.AddObservation(enemy.transform.position.z); // 1
+            sensor.AddObservation(enemy.Velocity); // 3
+        }
     }
 
     public override void OnActionReceived(float[] vectorAction)
     {
         // Animal died
-        if (InitialEnergy > 0 && energy <= 0 && !IsDoneCalled)
-        {
-            IsDoneCalled = true;
-            SubtractReward(0.1f);
-            Debug.Log($"Current Reward: {GetCumulativeReward()}");
-            EndEpisode();
-        }
+        //if (Energy > 0 && initialEnergy <= 0 && !IsDoneCalled)
+        //{
+        //    IsDoneCalled = true;
+        //    SubtractReward(0.1f);
+        //    Debug.Log($"Current Reward: {GetCumulativeReward()}");
+        //    EndEpisode();
+        //}
 
         // Move
         Move(vectorAction);
 
-        energy--;
+        initialEnergy--;
     }
 
-    private void VerifyRaycast()
+    protected virtual void VerifyRaycast()
     {
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, 50f, layerMask))
         {
@@ -169,10 +186,8 @@ public class AnimalAgent : BasicAgent
 
     public override void UpdateTarget(IEnumerable<BaseTarget> baseTargets)
     {
-        targets.Clear();
-        targets.AddRange(baseTargets);
-        //Target = baseTargets.FirstOrDefault(t => t.IsValid && t is BaseSource) as BaseSource;
-
-        // TODO : add null validation
+        // get the closest target to the animal agent
+        var targetsOrdered = baseTargets.OrderBy(t => ObjectHelper.GetDistance(t.gameObject, gameObject));
+        Target = targetsOrdered.FirstOrDefault(t => t is FoodSource fs && !fs.IsConsumed) as FoodSource;
     }
 }

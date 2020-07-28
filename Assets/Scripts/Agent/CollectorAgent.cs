@@ -6,12 +6,13 @@ using UnityEngine;
 /// <summary>
 /// Represents an agent with the goal of collecting resources and bringing it to a defined goal.
 /// </summary>
-public class CollectorAgent : BasicAgent
+public class CollectorAgent : BasicAgent, IHasGoal
 {    
     private BaseResource resource;
     private bool HasResource => resource is object;
     private bool IsAtResource { get; set; }
     new public BaseSource Target { get; set; }
+    public BaseStructure Goal { get; private set; }
 
     void Start()
     {
@@ -165,7 +166,10 @@ public class CollectorAgent : BasicAgent
     public override void UpdateTarget(IEnumerable<BaseTarget> baseTargets)
     {
         Target = baseTargets.FirstOrDefault(t => t.IsValid && t is BaseSource) as BaseSource;
+    }
 
-        // TODO : add null validation
+    public void UpdateGoal(IEnumerable<BaseStructure> baseStructures)
+    {
+        Goal = baseStructures.FirstOrDefault();
     }
 }

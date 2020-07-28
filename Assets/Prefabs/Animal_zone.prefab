@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96133822217330991}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.044863183, y: 0.16882817, z: -0.2725873}
+  m_LocalPosition: {x: -0.044863183, y: 0, z: -0.2725873}
   m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_Children:
   - {fileID: 2044115979340472729}
@@ -76,7 +76,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420656362719740666}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.191841, y: -7.5064087, z: -6.9006352}
+  m_LocalPosition: {x: -11.191841, y: 0, z: -6.9006352}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7668580507707804078}
@@ -155,9 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f4a8972e41607448eb5b0c41e19b39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 0
-  resourceCount: 0
-  hp: 100
+  range: 50
+  resourceCount: 100
+  energyValue: 5
 --- !u!1 &606435458006590011
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,7 +186,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 606435458006590011}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.206839, y: -7.5064087, z: -5.3156347}
+  m_LocalPosition: {x: -16.206839, y: 0, z: -5.3156347}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7668580507707804078}
@@ -266,8 +266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 50
-  resourceCount: 0
-  hp: 100
+  resourceCount: 100
+  energyValue: 5
 --- !u!1 &2964181352764145694
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,7 +296,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2964181352764145694}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.471841, y: -7.5064087, z: -5.3156347}
+  m_LocalPosition: {x: -9.471841, y: 0, z: -5.3156347}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7668580507707804078}
@@ -376,8 +376,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 50
-  resourceCount: 0
-  hp: 100
+  resourceCount: 100
+  energyValue: 5
 --- !u!1 &3458071006720342964
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,7 +407,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3458071006720342964}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.08, y: -7.911409, z: -19.76}
+  m_LocalPosition: {x: -22.08, y: 1.3, z: -19.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7668580507707804078}

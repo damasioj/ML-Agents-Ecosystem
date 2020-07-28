@@ -27,7 +27,11 @@ public class EnvironmentManager : MonoBehaviour
         {
             agent.TaskDone += OnTaskDone;
             agent.UpdateTarget(Targets);
-            agent.UpdateGoal(GetPendingStructures());
+
+            if (agent is IHasGoal agentWithGoal)
+            {
+                agentWithGoal.UpdateGoal(GetPendingStructures());
+            }
         }
     }
 
@@ -49,7 +53,11 @@ public class EnvironmentManager : MonoBehaviour
         if (sender is BasicAgent callingAgent)
         {
             callingAgent.UpdateTarget(Targets);
-            callingAgent.UpdateGoal(GetPendingStructures());
+
+            if (callingAgent is IHasGoal agentWithGoal)
+            {
+                agentWithGoal.UpdateGoal(GetPendingStructures());
+            }
         }
     }
 }

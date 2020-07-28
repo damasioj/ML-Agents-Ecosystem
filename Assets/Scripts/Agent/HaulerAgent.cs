@@ -8,7 +8,7 @@ using UnityEngine;
 /// Represents an agent with the goal of physically moving an object to a target location in the scene.
 /// Uses a number of ray casts to perceive the environment.
 /// </summary>
-public class HaulerAgent : BasicAgent
+public class HaulerAgent : BasicAgent, IHasGoal
 {
     // agent
     GameObject agentHead;
@@ -41,7 +41,9 @@ public class HaulerAgent : BasicAgent
             targetBody = Target.GetComponent<Rigidbody>();
         }
     }
-    
+
+    public BaseStructure Goal { get; private set; }
+
     private void Start()
     {
         if (!(Target is null || Target is IMovable))
@@ -74,12 +76,12 @@ public class HaulerAgent : BasicAgent
     {
         if (Target is object && Goal is object)
         {
-            float distance = ObjectHelper.EvaluateProximity(ref lastTargetDistance, Target.gameObject, Goal.gameObject);
+            float distanceChange = ObjectHelper.GetDistanceDelta(ref lastTargetDistance, Target.gameObject, Goal.gameObject);
 
-            if (distance > 0)
+            if (distanceChange > 0)
             {
                 InternalStepCount = StepCount;
-                AddReward(distance * 0.0001f);
+                AddReward(distanceChange * 0.0001f);
             }
         }
     }
@@ -247,5 +249,10 @@ public class HaulerAgent : BasicAgent
             raycastsHit[index] = false;
             obstacles[index] = null;
         }
+    }
+
+    public void UpdateGoal(IEnumerable<BaseStructure> baseStructures)
+    {
+        Goal = baseStructures.FirstOrDefault();
     }
 }

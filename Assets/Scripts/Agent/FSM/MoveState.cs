@@ -16,22 +16,21 @@ public class MoveState : AgentState
         var rBody = owner.GetComponent<Rigidbody>();
         var scale = owner.gameObject.transform.localScale.x;
 
+        //rBody.angularVelocity = Vector3.zero;
+        //rBody.velocity = Vector3.zero;
+        //if (animator.GetInteger("AnimIndex") != 0)
+        //{
+        //    animator.SetInteger("AnimIndex", 0);
+        //    animator.SetTrigger("Next");
+        //}
+
         if (rBody is object)
         {
             Vector3 controlSignal = Vector3.zero;
             controlSignal.x = vectorAction[0];
             controlSignal.z = vectorAction[1];
 
-            if (rBody.velocity.x > 30)
-            {
-                controlSignal.x = 0;
-            }
-            if (rBody.velocity.z > 30)
-            {
-                controlSignal.z = 0;
-            }
-
-            rBody.AddForce(new Vector3(controlSignal.x * owner.speed * scale, 0, controlSignal.z * owner.speed * scale));
+            rBody.AddForce(new Vector3(controlSignal.x * owner.acceleration * scale, 0, controlSignal.z * owner.acceleration * scale));
         }
 
         SetDirection(owner);
