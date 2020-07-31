@@ -46,7 +46,6 @@ public class ResourceCollection<T> : ICollection
     /// <summary>
     /// Returns the resource and removes it from the collection.
     /// </summary>
-    /// <returns></returns>
     public T Take()
     {
         if (Count > 0)
@@ -59,6 +58,10 @@ public class ResourceCollection<T> : ICollection
         return default;
     }
 
+    /// <summary>
+    /// Adds the resource to the collection.
+    /// Takes a reference of the resource in order to nullify it to ensure no duplication.
+    /// </summary>
     public void Add(ref T resource)
     {
         var newResource = resource;

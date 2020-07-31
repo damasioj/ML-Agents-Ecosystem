@@ -9,6 +9,12 @@ public class HouseStructure : BaseStructure
 
     public int woodRequired;
     public int stoneRequired;
+    
+    private void Awake()
+    {
+        woodResources = new ResourceCollection<WoodResource>();
+        stoneResources = new ResourceCollection<StoneResource>();
+    }
 
     public override void Reset()
     {
@@ -20,8 +26,8 @@ public class HouseStructure : BaseStructure
     {
         get
         {
-            return woodResources.Count >= woodRequired
-                && stoneResources.Count >= stoneRequired;
+            return woodResources?.Count >= woodRequired
+                && stoneResources?.Count >= stoneRequired;
         }
     }
 
@@ -32,15 +38,9 @@ public class HouseStructure : BaseStructure
             [typeof(WoodResource)] = woodRequired - woodResources.Count,
             [typeof(StoneResource)] = stoneRequired - stoneResources.Count
         };
-    }
+    }    
 
-    private void Awake()
-    {
-        woodResources = new ResourceCollection<WoodResource>();
-        stoneResources = new ResourceCollection<StoneResource>();
-    }
-
-    public override void AddResource(ref BaseResource resource) // TODO : REFACTOR
+    public override void AddResource(ref BaseResource resource) // TODO : refactor when using generics 
     {
         if (resource is WoodResource wood)
         {
@@ -51,7 +51,7 @@ public class HouseStructure : BaseStructure
             AddResource(ref stone);
         }
 
-        // ensure the source object is null to avoid duplication
+        // Double check the source object is null to avoid duplication
         if (resource is object)
         {
             resource = null;

@@ -16,8 +16,8 @@ public abstract class BaseSource : BaseTarget
     /// <summary>
     /// The amount of resources this source has when it spawns.
     /// </summary>
-    [SerializeField] private int resourceCount;
-    public int ResourceCount => resourceCount;
+    [SerializeField] protected int resourceCount;
+    public abstract int ResourceCount { get; }
     public abstract override bool IsValid { get; }
     public bool SourceHit { get; protected set; }    
     public abstract Type GetResourceType();
@@ -43,12 +43,13 @@ public class BaseSource<T> : BaseSource
 {
     protected ResourceCollection<T> Resources { get; set; }
 
-    public override bool IsValid => Resources.Count > 0;
+    public override bool IsValid => Resources?.Count > 0;
+    public override int ResourceCount => Resources.Count;
 
     private void Awake()
     {
         SourceHit = false;
-        Resources = new ResourceCollection<T>(ResourceCount);
+        Resources = new ResourceCollection<T>(resourceCount);
     }
 
     private void OnTriggerEnter(Collider other)

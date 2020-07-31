@@ -25,7 +25,7 @@ public class AnimalAgent : BasicAgent
         }
         set
         {
-            _energy += value;
+            _energy = value;
 
             if (_energy > initialEnergy)
             {
@@ -55,11 +55,6 @@ public class AnimalAgent : BasicAgent
         hitBoundary = false;
         layerMask = 0 << 8;
         layerMask = ~layerMask;
-    }
-
-    private void Update()
-    {
-        
     }
 
     void FixedUpdate()
@@ -102,7 +97,10 @@ public class AnimalAgent : BasicAgent
         switch (other.tag)
         {
             case "food":
-                HitTarget = true;
+                if (other.gameObject.Equals(Target.gameObject))
+                {
+                    HitTarget = true;
+                }
                 break;
             case "enemy":
                 if (!IsKilled)
@@ -112,6 +110,14 @@ public class AnimalAgent : BasicAgent
                     Debug.Log($"Current Reward: {GetCumulativeReward()}");
                 }
                 break;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("food") && other.gameObject.Equals(Target?.gameObject))
+        {
+            HitTarget = false;
         }
     }
 
@@ -162,12 +168,12 @@ public class AnimalAgent : BasicAgent
         // Move
         Move(vectorAction);
 
-        initialEnergy--;
+        Energy--;
     }
 
     protected virtual void VerifyRaycast()
     {
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, 50f, layerMask))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, 10f, layerMask))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
 
@@ -178,7 +184,7 @@ public class AnimalAgent : BasicAgent
         }
         else
         {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 50f, Color.white);
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 10f, Color.white);
 
             raycastHit = false;
         }
@@ -189,5 +195,7 @@ public class AnimalAgent : BasicAgent
         // get the closest target to the animal agent
         var targetsOrdered = baseTargets.OrderBy(t => ObjectHelper.GetDistance(t.gameObject, gameObject));
         Target = targetsOrdered.FirstOrDefault(t => t is FoodSource fs && !fs.IsConsumed) as FoodSource;
+
+        HitTarget = false;
     }
 }

@@ -8,7 +8,7 @@ public class FoodSource : BaseSource<BambooResource>
     [SerializeField] protected float energyValue;
     [HideInInspector] public bool IsConsumed => ResourceCount <= 0;
 
-    private void Awake()
+    private void Start()
     {
         SourceHit = false;
     }

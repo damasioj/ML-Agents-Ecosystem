@@ -487,31 +487,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
-      propertyPath: m_BrainParameters.VectorObservationSize
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
-        type: 3}
-      propertyPath: m_BrainParameters.VectorActionSpaceType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
-        type: 3}
-      propertyPath: m_BrainParameters.VectorActionSize.Array.data[0]
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
-        type: 3}
-      propertyPath: m_BehaviorName
-      value: AnimalBehavior
-      objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
-        type: 3}
-      propertyPath: TeamId
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2955506943275932041, guid: bcb79990e8932dc498a901e1d9d6618e,
-        type: 3}
       propertyPath: m_Model
       value: 
       objectReference: {fileID: 5022602860645237092, guid: d224b6be47e366c4aa609d1e250b909c,
@@ -563,9 +538,9 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   maxInternalSteps: 0
-  acceleration: 50
+  acceleration: 100
   enemy: {fileID: 1412991404}
-  initialEnergy: 0
+  initialEnergy: 5000
 --- !u!1 &1746207862
 GameObject:
   m_ObjectHideFlags: 0
@@ -926,6 +901,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 838943613440814323, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 987365606496500470, guid: 9ff728c4dca46e149ab9ab40863b8bab,
         type: 3}
       propertyPath: woodRequired
@@ -1075,11 +1055,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8895150787967934449, guid: 9ff728c4dca46e149ab9ab40863b8bab,
-        type: 3}
-      propertyPath: resourceCount
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ff728c4dca46e149ab9ab40863b8bab, type: 3}
