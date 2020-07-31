@@ -38,17 +38,23 @@ While developing the various scenarios within Unity it was found that the framew
 ## Input simplification
 
 *From ResourceCollector Scenario*
+
 When providing inputs to an agent, it is more efficient to divert the responsibility of quantitative requirements to another class. This class would send updated information of the targets to the agent in real-time and on-demand; at this point, one can add basic logic in the agent class for deciding what is the next target. Using this approach, the agent would only need a single target and does not need any information related to the task’s requirements.
+
 This simplification creates more flexibility as the number of targets and materials are no longer input parameters for the model, thus changing them does not affect the algorithm in any way. The result of this is that we can freely change the target and its behaviours without requiring any retraining whatsoever; the agent focuses solely on completing a task rather than understanding its requirements.
 
 ## Use of Finite-State Machines (FSMs)
 
 *From ResourceCollector Scenario*
+
 The scenario uses a basic implementation of finite-states to manage actions and animations from the agent. These states are triggered depending on the agent’s chosen action and environment conditions, rather than set by rules or an algorithm. For example, the agent enters the gathering state when it approaches the defined target. The gathering state automatically locks the agent in position and executes the action and necessary animations. 
+
 For the Ecosystem environment, all agents implement FSMs to manage actions and animations. 
 
 ## Object dimension information
 
 *From Hauler Scenario*
+
 Ideally, it would be best to have the possibility to provide the agent with an object's dimensions, but this seems to be more complicated than initially thought. The dimensions of a box, for instance, can be defined with 8 given vectors (1 vector for each point), but if we change the target object to a ball the number of vectors are virtually infinite. The most that can be provided is the size of an object - but again, this information has limited usefulness if one does not know its shape.
+
 The solution we used for this problem is creating an enum that will represent the different object shapes. The enum would obviously be very limiting, and adding a new shape would require retraining, but it would at least provide a few options to work with.
