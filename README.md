@@ -1,8 +1,8 @@
 # Master's Thesis: Ecosystem Simulation
 
-This project is being developed for a Master's thesis that studies the implementation of behaviours in subjects using Machine Learning. This scenario is a combination of all other scenarios related to the thesis (Animal, collector and hauler) and attempts to integrate all of the agents into a single environment.
+This project is being developed for a Master's thesis that studies the implementation of behaviours in subjects using Machine Learning. This scenario is a combination of all other scenarios related to the thesis (animal, collector and hauler) and attempts to integrate all of the agents into a single environment without retraining them.
 
-This project focuses on introducing game design aspects to the code structure that might be expected in real video games. 
+This project also focuses on introducing game design aspects to the code structure that might be expected in real video games. 
 
 # Unity ML-Agents SDK
 
@@ -29,11 +29,11 @@ To run this environment, you will need:
 
 ## Data Assocation
 
-Machine learning in general faces an issue with associating input data. All observations of the environment are typically bundled together into a single array and then passed through the model. The model must create an association on its own through training which leads to increased training times. It would have made the agent’s learning process a lot faster if it were possible to associate data to their virtual objects. For instance, in the first scenario (AnimalSimulation), it would have been beneficial to associate the enemy’s velocity and position to the enemy itself. This way when processing those values, the model would understand that those values have no relation to any other object aside from the enemy, decreasing its training time. 
+Machine learning in general faces an issue with associating input data. All observations of the environment are typically bundled together into a single array and then passed through the model. The model must create an association on its own through training which leads to increased training times. It would have made the agent’s learning process a lot faster if it were possible to associate data to their virtual objects. For instance, in the first scenario (AnimalSimulation), it would have been beneficial to associate the enemy’s velocity and position to the enemy itself. This way when processing those values, the model would understand that those values have no relation to any other object aside from the enemy, decreasing its training time. This, of course, is a limitation in machine learning and is beyond the scope of this project and study.
 
 ## Abstraction with Unity
 
-While developing the various scenarios within Unity it was found that the framework has some limitations regarding abstraction. These limitations affected the time it took to develop scenarios and a proper architecture for implementing the agents, but only after finding acceptable workarounds. One of the main limitations is the lack of support for interfaces with Unity’s game objects. When referencing a game object, only the concrete or abstract class is returned. It is necessary to manually convert and verify if a game object implements an interface before you can reference that interface directly. The main issue with this fact is that most of Unity’s supported functions use game objects, so it is more cost effective to instead use abstract classes. Another limitation is that all game objects, including agents, must inherit from the Monobehaviour class. The Monobehaviour class is responsible for instantiating and updating game objects. This makes it impossible to use dependency inversion for managing our classes. While this limitation has not greatly affected the development of the environments, it may be a factor when implementing agents into a real game environment.
+While developing the various scenarios within Unity it was found that the framework has some limitations regarding abstraction. These limitations affected the time it took to develop scenarios and a proper architecture for implementing the agents. One of the main limitations is the lack of support for interfaces with Unity’s game objects. When referencing a game object, only the concrete or abstract class is returned. It is necessary to manually convert and verify if a game object implements an interface before you can reference that interface directly. The main issue with this fact is that most of Unity’s supported functions use game objects, so it is more cost effective to instead use abstract classes. Another limitation is that all game objects, including agents, must inherit from the Monobehaviour class. The Monobehaviour class is responsible for instantiating and updating game objects. This makes it impossible to use dependency inversion. While this limitation has not greatly affected the development of the environments, it may be a factor when implementing agents into a real game environment.
 
 ## Input simplification
 
@@ -57,4 +57,6 @@ For the Ecosystem environment, all agents implement FSMs to manage actions and a
 
 Ideally, it would be best to have the possibility to provide the agent with an object's dimensions, but this seems to be more complicated than initially thought. The dimensions of a box, for instance, can be defined with 8 given vectors (1 vector for each point), but if we change the target object to a ball the number of vectors are virtually infinite. The most that can be provided is the size of an object - but again, this information has limited usefulness if one does not know its shape.
 
-The solution we used for this problem is creating an enum that will represent the different object shapes. The enum would obviously be very limiting, and adding a new shape would require retraining, but it would at least provide a few options to work with.
+The solution we used for this problem is creating an enum that will represent the different object shapes. The enum would obviously be limiting, and adding a new shape would require retraining, but it would at least provide a few options to work with.
+
+*Note: The enum solution has been kept within the project but is not used. It is merely for demonstration purposes.*
