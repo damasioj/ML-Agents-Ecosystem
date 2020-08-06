@@ -42,7 +42,7 @@ public class CollectorAgent : BasicAgent, IHasGoal
                     ValidateJobComplete();
                     ValidateGoalComplete();
                     InternalStepCount = 0;
-                    Debug.Log($"Current Reward: {GetCumulativeReward()}");
+                    Debug.Log($"COLLECTOR :: Current Reward = {GetCumulativeReward()}");
                 }
                 break;
             case "target":
@@ -56,7 +56,7 @@ public class CollectorAgent : BasicAgent, IHasGoal
                 {
                     IsDoneCalled = true;
                     SubtractReward(0.1f);
-                    Debug.Log($"Current Reward: {GetCumulativeReward()}");
+                    Debug.Log($"COLLECTOR :: Current Reward = {GetCumulativeReward()}");
                 }
                 break;
         }
@@ -135,8 +135,6 @@ public class CollectorAgent : BasicAgent, IHasGoal
             if (resource is object)
             {
                 InternalStepCount = 0;
-                AddReward(0.1f);
-                Debug.Log($"Current Reward: {GetCumulativeReward()}");
             }
         }
     }

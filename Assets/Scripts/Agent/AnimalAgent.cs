@@ -21,7 +21,7 @@ public class AnimalAgent : BasicAgent
     {
         get
         {
-            return initialEnergy;
+            return _energy;
         }
         set
         {
@@ -37,7 +37,6 @@ public class AnimalAgent : BasicAgent
     private bool HitTarget { get; set; }
     new public FoodSource Target { get; set; } // To reduce conversion costs when getting data from FoodSource
 
-    private bool hitBoundary;
     private Rigidbody rBody;
     private bool raycastHit;
     private Vector3 previousPosition;
@@ -52,7 +51,6 @@ public class AnimalAgent : BasicAgent
         raycastHit = false;
         rBody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        hitBoundary = false;
         layerMask = 0 << 8;
         layerMask = ~layerMask;
     }
@@ -73,10 +71,12 @@ public class AnimalAgent : BasicAgent
             // if agent is at target, consume it
             if (HitTarget && Target is object)
             {
-                Energy += Target.Consume(1);
+                Energy += Target.Consume(1);             
 
                 if (Target.IsConsumed)
                 {
+                    SetReward(1.5f);
+                    Debug.Log($"ANIMAL :: Energy = {Energy} // Reward = {GetCumulativeReward()}");
                     OnTaskDone();
                 }
             }
@@ -157,13 +157,13 @@ public class AnimalAgent : BasicAgent
     public override void OnActionReceived(float[] vectorAction)
     {
         // Animal died
-        //if (Energy > 0 && initialEnergy <= 0 && !IsDoneCalled)
-        //{
-        //    IsDoneCalled = true;
-        //    SubtractReward(0.1f);
-        //    Debug.Log($"Current Reward: {GetCumulativeReward()}");
-        //    EndEpisode();
-        //}
+        if (Energy > 0 && initialEnergy <= 0 && !IsDoneCalled)
+        {
+            IsDoneCalled = true;
+            SubtractReward(0.1f);
+            Debug.Log($"Current Reward: {GetCumulativeReward()}");
+            //EndEpisode();
+        }
 
         // Move
         Move(vectorAction);

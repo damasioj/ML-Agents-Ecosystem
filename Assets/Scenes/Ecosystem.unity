@@ -433,7 +433,7 @@ PrefabInstance:
     - target: {fileID: 1764907877719399626, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.66
+      value: 1.51
       objectReference: {fileID: 0}
     - target: {fileID: 1764907877719399626, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
@@ -489,7 +489,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: d224b6be47e366c4aa609d1e250b909c,
+      objectReference: {fileID: 5022602860645237092, guid: a3161f778b6788c40b0495c841f15d64,
         type: 3}
     - target: {fileID: 5772160306743768434, guid: bcb79990e8932dc498a901e1d9d6618e,
         type: 3}
@@ -540,7 +540,7 @@ MonoBehaviour:
   maxInternalSteps: 0
   acceleration: 100
   enemy: {fileID: 1412991404}
-  initialEnergy: 5000
+  initialEnergy: 750
 --- !u!1 &1746207862
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,6 +991,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.42
       objectReference: {fileID: 0}
+    - target: {fileID: 5565059728204854366, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -15.63
+      objectReference: {fileID: 0}
     - target: {fileID: 5789989637365574247, guid: 9ff728c4dca46e149ab9ab40863b8bab,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -1050,6 +1055,11 @@ PrefabInstance:
         type: 3}
       propertyPath: resourceCount
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475859554475353438, guid: 9ff728c4dca46e149ab9ab40863b8bab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -42.4
       objectReference: {fileID: 0}
     - target: {fileID: 8545306824501021831, guid: 9ff728c4dca46e149ab9ab40863b8bab,
         type: 3}

@@ -92,9 +92,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5000001
-  m_Height: 2
+  m_Height: 4.40141
   m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Center: {x: 0.00000003973643, y: -0.23360252, z: -0.00000007947286}
 --- !u!114 &5852475236787430591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,5 +108,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 50
-  resourceCount: 50
-  energyValue: 5
+  resourceCount: 100
+  energyValue: 10
