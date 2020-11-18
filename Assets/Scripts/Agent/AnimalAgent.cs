@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 public class AnimalAgent : BasicAgent
 {
-    [SerializeField] Enemy enemy; // TODO : divert to environment manager    
+    [SerializeField] Enemy enemy; // just for demonstration purposes    
     /// <summary>
     /// Amount of energy the animal begins with.
     /// </summary>
@@ -35,55 +35,49 @@ public class AnimalAgent : BasicAgent
     }
     private bool IsKilled { get; set; }
     private bool HitTarget { get; set; }
+    private bool StartedConsumption { get; set; }
     new public FoodSource Target { get; set; } // To reduce conversion costs when getting data from FoodSource
 
     private Rigidbody rBody;
-    private bool raycastHit;
     private Vector3 previousPosition;
     private Animator animator;
-    private int layerMask;
 
     private void Start()
     {
         Energy = initialEnergy;
         HitTarget = false;
         IsKilled = false;
-        raycastHit = false;
         rBody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        layerMask = 0 << 8;
-        layerMask = ~layerMask;
     }
 
-    void FixedUpdate()
-    {
-        if (!IsDoneCalled)
-        {
-            // check if agent died or hit a boundary and reset episode
-            //if (IsKilled)
-            //{
-            //    IsDoneCalled = true;
-            //    animator.SetInteger("AnimIndex", 2);
-            //    animator.SetTrigger("Next");
-            //    EndEpisode();
-            //}
+    //void FixedUpdate()
+    //{
+    //    if (!IsDoneCalled)
+    //    {
+    //        // check if agent died or hit a boundary and reset episode
+    //        //if (IsKilled)
+    //        //{
+    //        //    IsDoneCalled = true;
+    //        //    animator.SetInteger("AnimIndex", 2);
+    //        //    animator.SetTrigger("Next");
+    //        //    EndEpisode();
+    //        //}
 
-            // if agent is at target, consume it
-            if (HitTarget && Target is object)
-            {
-                Energy += Target.Consume(1);             
+    //        // if agent is at target, consume it
+    //        //if (HitTarget && Target is object)
+    //        //{
+    //        //    Energy += Target.Consume(1);             
 
-                if (Target.IsConsumed)
-                {
-                    SetReward(1.5f);
-                    Debug.Log($"ANIMAL :: Energy = {Energy} // Reward = {GetCumulativeReward()}");
-                    OnTaskDone();
-                }
-            }
-        }
-
-        VerifyRaycast();
-    }
+    //        //    if (Target.IsConsumed)
+    //        //    {
+    //        //        SetReward(1.5f);
+    //        //        Debug.Log($"ANIMAL :: Energy = {Energy} // Reward = {GetCumulativeReward()}");
+    //        //        OnTaskDone();
+    //        //    }
+    //        //}
+    //    }
+    //}
 
     public override void OnEpisodeBegin()
     {
@@ -107,7 +101,7 @@ public class AnimalAgent : BasicAgent
                 {
                     IsKilled = true;
                     SubtractReward(0.2f);
-                    Debug.Log($"Current Reward: {GetCumulativeReward()}");
+                    Debug.Log($"ANIMAL :: Current Reward: {GetCumulativeReward()}");
                 }
                 break;
         }
@@ -123,20 +117,23 @@ public class AnimalAgent : BasicAgent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        if (!IsDoneCalled)
+        if (!IsDoneCalled && Target is object)
         {
-            // target
-            if (Target is object) // if there is an existing food source nearby
+            if (Target is object)
             {
-                sensor.AddObservation(Target.transform.position); // 3
+                // target
+                sensor.AddObservation(Target.transform.position.x); // 2
+                sensor.AddObservation(Target.transform.position.y);
                 sensor.AddObservation(HitTarget); // 1
                 sensor.AddObservation(Target.ResourceCount); // 1
             }
             else
             {
-                sensor.AddObservation(Vector3.zero); // 3
-                sensor.AddObservation(false); // 1
-                sensor.AddObservation(0); // 1
+                //sensor.AddObservation(Vector3.zero);
+                sensor.AddObservation(0f);
+                sensor.AddObservation(0f);
+                sensor.AddObservation(false);
+                sensor.AddObservation(0f);
             }
 
             // agent
@@ -144,7 +141,6 @@ public class AnimalAgent : BasicAgent
             sensor.AddObservation(transform.position.z); // 1
             sensor.AddObservation(rBody.velocity.x); // 1
             sensor.AddObservation(rBody.velocity.z); // 1
-            sensor.AddObservation(raycastHit); // 1
             sensor.AddObservation(Energy); // 1
 
             // enemy
@@ -157,37 +153,64 @@ public class AnimalAgent : BasicAgent
     public override void OnActionReceived(float[] vectorAction)
     {
         // Animal died
-        if (Energy > 0 && initialEnergy <= 0 && !IsDoneCalled)
-        {
-            IsDoneCalled = true;
-            SubtractReward(0.1f);
-            Debug.Log($"Current Reward: {GetCumulativeReward()}");
-            //EndEpisode();
-        }
+        //if (Energy <= 0 && initialEnergy > 0 && !IsDoneCalled)
+        //{
+        //    IsDoneCalled = true;
+        //    SubtractReward(0.1f);
+        //    Debug.Log($"ANIMAL :: Current Reward: {GetCumulativeReward()}");
+        //    //EndEpisode();
+        //}
 
         // Move
         Move(vectorAction);
 
+        // Action (eat)
+        if (Convert.ToBoolean(vectorAction[2]))
+        {
+            TryConsume();
+        }
+
         Energy--;
+
+        if (Energy <= 100) // for testing only
+        {
+            Energy += 1000;
+        }
     }
 
-    protected virtual void VerifyRaycast()
+    protected virtual void TryConsume()
     {
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, 10f, layerMask))
+        // if agent is at target, consume it
+        if (HitTarget && Target is object)
         {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
-
-            if (hit.collider.CompareTag("obstacle"))
+            if (!Target.IsConsumed)
             {
-                raycastHit = true;
+                if (!StartedConsumption)
+                {
+                    AddReward(0.75f);
+                    StartedConsumption = true;
+                    Debug.Log($"ANIMAL :: Current Reward: {GetCumulativeReward()}");
+                }
+
+                float targetEnergy = Target.Consume(1);
+                Energy += targetEnergy;
+
+                if (Target.IsConsumed)
+                {
+                    AddReward(0.75f);
+                    HitTarget = false;
+                    OnTaskDone();
+                    Debug.Log($"ANIMAL :: Current Reward: {GetCumulativeReward()}");
+                }
             }
         }
-        else
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 10f, Color.white);
+    }
 
-            raycastHit = false;
-        }
+    public override void Heuristic(float[] actions)
+    {
+        actions[0] = Input.GetAxis("Horizontal");
+        actions[1] = Input.GetAxis("Vertical");
+        actions[2] = Convert.ToSingle(Input.GetKey(KeyCode.E));
     }
 
     public override void UpdateTarget(IEnumerable<BaseTarget> baseTargets)
@@ -195,6 +218,11 @@ public class AnimalAgent : BasicAgent
         // get the closest target to the animal agent
         var targetsOrdered = baseTargets.OrderBy(t => ObjectHelper.GetDistance(t.gameObject, gameObject));
         Target = targetsOrdered.FirstOrDefault(t => t is FoodSource fs && !fs.IsConsumed) as FoodSource;
+
+        if (Target == null)
+        {
+            Debug.Log("ANIMAL :: No targets to consume.");
+        }
 
         HitTarget = false;
     }

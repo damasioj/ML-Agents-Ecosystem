@@ -52,7 +52,7 @@ public class BaseSource<T> : BaseSource
         Resources = new ResourceCollection<T>(resourceCount);
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         SourceHit = true;
     }
@@ -75,7 +75,7 @@ public class BaseSource<T> : BaseSource
         }
     }
 
-    private void ResetCollection(int amount)
+    protected void ResetCollection(int amount)
     {
         Resources = new ResourceCollection<T>(amount);
     }

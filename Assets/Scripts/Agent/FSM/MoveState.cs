@@ -68,6 +68,9 @@ public class MoveState : AgentState
     {
         var direction = (owner.transform.position - _lastPosition).normalized;
 
-        owner.transform.rotation = Quaternion.Slerp(owner.transform.rotation, Quaternion.LookRotation(direction), 0.15F);
+        if (owner.transform.rotation != Quaternion.LookRotation(direction))
+        {
+            owner.transform.rotation = Quaternion.Slerp(owner.transform.rotation, Quaternion.LookRotation(direction), 0.15F);
+        }
     }
 }

@@ -84,22 +84,25 @@ public class CollectorAgent : BasicAgent, IHasGoal
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // target location
-        sensor.AddObservation(Target.Location.x); //1
-        sensor.AddObservation(Target.Location.z); //1
+        if (Target is object)
+        {
+            // target location
+            sensor.AddObservation(Target.Location.x); //1
+            sensor.AddObservation(Target.Location.z); //1
 
-        // goal info
-        sensor.AddObservation(Goal.transform.position.x); //1
-        sensor.AddObservation(Goal.transform.position.z); //1
+            // goal info
+            sensor.AddObservation(Goal.transform.position.x); //1
+            sensor.AddObservation(Goal.transform.position.z); //1
 
-        // Agent data
-        sensor.AddObservation(HasResource); //1
-        sensor.AddObservation(transform.position.x); //1
-        sensor.AddObservation(transform.position.z); //1
-        sensor.AddObservation(Body.velocity.x); //1
-        sensor.AddObservation(Body.velocity.z); //1
-        sensor.AddObservation((int)CurrentState); // 1
-        sensor.AddObservation(IsAtResource); // 1
+            // Agent data
+            sensor.AddObservation(HasResource); //1
+            sensor.AddObservation(transform.position.x); //1
+            sensor.AddObservation(transform.position.z); //1
+            sensor.AddObservation(Body.velocity.x); //1
+            sensor.AddObservation(Body.velocity.z); //1
+            sensor.AddObservation((int)CurrentState); // 1
+            sensor.AddObservation(IsAtResource); // 1
+        }
     }
 
     public override void OnActionReceived(float[] vectorAction)
@@ -157,17 +160,29 @@ public class CollectorAgent : BasicAgent, IHasGoal
         if (Goal.IsComplete)
         {
             AddReward(2.0f);
-            EndEpisode();
+            //EndEpisode();
         }
     }
 
     public override void UpdateTarget(IEnumerable<BaseTarget> baseTargets)
     {
         Target = baseTargets.FirstOrDefault(t => t.IsValid && t is BaseSource) as BaseSource;
+
+        if (Target == null)
+        {
+            Debug.Log("COLLECTOR :: No targets.");
+        }
     }
 
     public void UpdateGoal(IEnumerable<BaseStructure> baseStructures)
     {
-        Goal = baseStructures.FirstOrDefault();
+        if (baseStructures.Count() > 0)
+        {
+            Goal = baseStructures.First();
+        }
+        else
+        {
+            Debug.Log("COLLECTOR :: No new goals.");
+        }
     }
 }

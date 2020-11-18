@@ -6,16 +6,16 @@ public class FoodSource : BaseSource<BambooResource>
     /// The amount of energy that this food source provides when consumed.
     /// </summary>
     [SerializeField] protected float energyValue;
+    /// <summary>
+    /// The variable amount of resources this source can have when it spawns.
+    /// </summary>
+    [SerializeField] protected float resourceCountRange;
     [HideInInspector] public bool IsConsumed => ResourceCount <= 0;
 
     private void Start()
     {
         SourceHit = false;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        SourceHit = true;
+        //ResetCollection((int)Random.Range(10f, resourceCountRange));
     }
 
     public float Consume(int value)

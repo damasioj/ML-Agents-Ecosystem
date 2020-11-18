@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
-        UpdateLocation();
+        //UpdateLocation();
     }
 
     public void Reset()
