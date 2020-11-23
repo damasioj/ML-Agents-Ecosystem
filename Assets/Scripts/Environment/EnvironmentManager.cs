@@ -9,29 +9,30 @@ using UnityEngine;
 /// </summary>
 public class EnvironmentManager : MonoBehaviour
 {
-    public List<BasicAgent> agents;
-
     #region Properties
     private List<BaseTarget> Targets { get; set; }
     private List<BaseSource> Sources { get; set; }
     private List<BaseStructure> Structures { get; set; }
+    private List<BasicAgent> Agents { get; set; }
     #endregion
 
     void Awake()
     {
+        Agents = GetComponentsInChildren<BasicAgent>().ToList();
         Targets = GetComponentsInChildren<BaseTarget>().ToList();
         Sources = GetComponentsInChildren<BaseSource>().ToList();
         Structures = GetComponentsInChildren<BaseStructure>().ToList();
         
-        foreach (var agent in agents)
+        foreach (var agent in Agents)
         {
             agent.TaskDone += OnTaskDone;
-            agent.UpdateTarget(Targets);
 
             if (agent is IHasGoal agentWithGoal)
             {
                 agentWithGoal.UpdateGoal(GetPendingStructures());
             }
+
+            agent.UpdateTarget(Targets);
         }
     }
 

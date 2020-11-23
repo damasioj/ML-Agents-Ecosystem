@@ -122,8 +122,8 @@ public class AnimalAgent : BasicAgent
             if (Target is object)
             {
                 // target
-                sensor.AddObservation(Target.transform.position.x); // 2
-                sensor.AddObservation(Target.transform.position.y);
+                sensor.AddObservation(Target.Location.x); // 2
+                sensor.AddObservation(Target.Location.z);
                 sensor.AddObservation(HitTarget); // 1
                 sensor.AddObservation(Target.ResourceCount); // 1
             }
@@ -137,15 +137,15 @@ public class AnimalAgent : BasicAgent
             }
 
             // agent
-            sensor.AddObservation(transform.position.x); // 1
-            sensor.AddObservation(transform.position.z); // 1
+            sensor.AddObservation(transform.localPosition.x); // 1
+            sensor.AddObservation(transform.localPosition.z); // 1
             sensor.AddObservation(rBody.velocity.x); // 1
             sensor.AddObservation(rBody.velocity.z); // 1
             sensor.AddObservation(Energy); // 1
 
             // enemy
-            sensor.AddObservation(enemy.transform.position.x); // 1
-            sensor.AddObservation(enemy.transform.position.z); // 1
+            sensor.AddObservation(enemy.transform.localPosition.x); // 1
+            sensor.AddObservation(enemy.transform.localPosition.z); // 1
             sensor.AddObservation(enemy.Velocity); // 3
         }
     }

@@ -25,11 +25,11 @@ public abstract class BaseStructure : MonoBehaviour
     {
         get
         {
-            return gameObject.transform.position;
+            return gameObject.transform.localPosition;
         }
         private set
         {
-            gameObject.transform.position = value;
+            gameObject.transform.localPosition = value;
         }
     }
 

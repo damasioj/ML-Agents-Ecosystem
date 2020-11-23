@@ -91,13 +91,13 @@ public class CollectorAgent : BasicAgent, IHasGoal
             sensor.AddObservation(Target.Location.z); //1
 
             // goal info
-            sensor.AddObservation(Goal.transform.position.x); //1
-            sensor.AddObservation(Goal.transform.position.z); //1
+            sensor.AddObservation(Goal.Location.x); //1
+            sensor.AddObservation(Goal.Location.z); //1
 
             // Agent data
             sensor.AddObservation(HasResource); //1
-            sensor.AddObservation(transform.position.x); //1
-            sensor.AddObservation(transform.position.z); //1
+            sensor.AddObservation(transform.localPosition.x); //1
+            sensor.AddObservation(transform.localPosition.z); //1
             sensor.AddObservation(Body.velocity.x); //1
             sensor.AddObservation(Body.velocity.z); //1
             sensor.AddObservation((int)CurrentState); // 1
@@ -166,7 +166,11 @@ public class CollectorAgent : BasicAgent, IHasGoal
 
     public override void UpdateTarget(IEnumerable<BaseTarget> baseTargets)
     {
-        Target = baseTargets.FirstOrDefault(t => t.IsValid && t is BaseSource) as BaseSource;
+        // updates with a valid target that contains a resource required by the goal
+        var resourceTypes = Goal.GetResourcesRequired().Where(g => g.Value > 0).Select(g => g.Key);
+        Target = baseTargets.FirstOrDefault(t => t.IsValid 
+                                            && t is BaseSource source 
+                                            && resourceTypes.Contains(source.GetResourceType())) as BaseSource;
 
         if (Target == null)
         {

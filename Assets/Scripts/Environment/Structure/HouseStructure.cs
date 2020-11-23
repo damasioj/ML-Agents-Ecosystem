@@ -40,7 +40,7 @@ public class HouseStructure : BaseStructure
         };
     }    
 
-    public override void AddResource(ref BaseResource resource) // TODO : refactor when using generics 
+    public override void AddResource(ref BaseResource resource) 
     {
         if (resource is WoodResource wood)
         {

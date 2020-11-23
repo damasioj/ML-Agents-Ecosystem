@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13cf3a4a5e0477149a1118ba4708d797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodRequired: 10
+  woodRequired: 3
   stoneRequired: 10
 --- !u!1 &3450661121650396508
 GameObject:
