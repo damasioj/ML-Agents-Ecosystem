@@ -47,7 +47,7 @@ This simplification creates more flexibility as the number of targets and materi
 
 *From ResourceCollector Scenario*
 
-The scenario uses a basic implementation of finite-states to manage actions and animations from the agent. These states are triggered depending on the agent’s chosen action and environment conditions, rather than set by rules or an algorithm. For example, the agent enters the gathering state when it approaches the defined target. The gathering state automatically locks the agent in position and executes the action and necessary animations. 
+The scenario uses a basic implementation of finite-states to manage actions and animations from the agent. These states are triggered depending on the agent’s chosen action and environment conditions, rather than set by rules or an algorithm. For example, the agent enters the gathering state when it approaches the defined target. The gathering state automatically locks the agent in position and executes the action and necessary animations. The FSM does not contribute in any way to the agent's AI, it only serves as a way to correlate the agent's actions with animations.
 
 For the Ecosystem environment, all agents implement FSMs to manage actions and animations. 
 
