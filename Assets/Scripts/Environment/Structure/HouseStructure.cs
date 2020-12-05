@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// TODO : could be refactored with generics ...
 public class HouseStructure : BaseStructure
 {
-    private ResourceCollection<WoodResource> woodResources; 
-    private ResourceCollection<StoneResource> stoneResources;
+    protected ResourceCollection<WoodResource> woodResources; 
+    protected ResourceCollection<StoneResource> stoneResources;
 
     public int woodRequired;
     public int stoneRequired;
     
-    private void Awake()
+    protected void Awake()
     {
         woodResources = new ResourceCollection<WoodResource>();
         stoneResources = new ResourceCollection<StoneResource>();
@@ -58,12 +57,12 @@ public class HouseStructure : BaseStructure
         }
     }
 
-    private void AddResource(ref WoodResource wood)
+    protected void AddResource(ref WoodResource wood)
     {
         woodResources.Add(ref wood);
     }
 
-    private void AddResource(ref StoneResource stone)
+    protected void AddResource(ref StoneResource stone)
     {
         stoneResources.Add(ref stone);
     }
