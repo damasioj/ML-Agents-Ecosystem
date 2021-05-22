@@ -27,6 +27,14 @@ To run this environment, you will need:
 
 # Limitations and Observations
 
+## Use of Finite-State Machines (FSMs)
+
+*From ResourceCollector Scenario*
+
+The scenario uses a basic implementation of finite-states to manage actions and animations from the agent. These states are triggered depending on the agent’s chosen action and environment conditions, rather than set by rules or an algorithm. For example, the agent enters the gathering state when it approaches the defined target. The gathering state automatically locks the agent in position and executes the action and necessary animations. The FSM does not contribute in any way to the agent's AI, it only serves as a way to correlate the agent's actions with animations.
+
+For the Ecosystem environment, all agents implement FSMs to manage actions and animations. 
+
 ## Data Assocation
 
 Machine learning in general faces an issue with associating input data. All observations of the environment are typically bundled together into a single array and then passed through the model. The model must create an association on its own through training which leads to increased training times. It would have made the agent’s learning process a lot faster if it were possible to associate data to their virtual objects. For instance, in the first scenario (AnimalSimulation), it would have been beneficial to associate the enemy’s velocity and position to the enemy itself. This way when processing those values, the model would understand that those values have no relation to any other object aside from the enemy, decreasing its training time. This, of course, is a limitation in machine learning and is beyond the scope of this project and study.
@@ -42,14 +50,6 @@ While developing the various scenarios within Unity it was found that the framew
 When providing inputs to an agent, it is more efficient to divert the responsibility of quantitative requirements to another class. This class would send updated information of the targets to the agent in real-time and on-demand; at this point, one can add basic logic in the agent class for deciding what is the next target. Using this approach, the agent would only need a single target and does not need any information related to the task’s requirements.
 
 This simplification creates more flexibility as the number of targets and materials are no longer input parameters for the model, thus changing them does not affect the algorithm in any way. The result of this is that we can freely change the target and its behaviours without requiring any retraining whatsoever; the agent focuses solely on completing a task rather than understanding its requirements.
-
-## Use of Finite-State Machines (FSMs)
-
-*From ResourceCollector Scenario*
-
-The scenario uses a basic implementation of finite-states to manage actions and animations from the agent. These states are triggered depending on the agent’s chosen action and environment conditions, rather than set by rules or an algorithm. For example, the agent enters the gathering state when it approaches the defined target. The gathering state automatically locks the agent in position and executes the action and necessary animations. The FSM does not contribute in any way to the agent's AI, it only serves as a way to correlate the agent's actions with animations.
-
-For the Ecosystem environment, all agents implement FSMs to manage actions and animations. 
 
 ## Object dimension information
 
