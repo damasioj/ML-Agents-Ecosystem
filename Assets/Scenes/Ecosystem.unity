@@ -429,9 +429,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eb08f7c046e4e5438b5eb0df9ce2cf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  woodRequired: 2
-  stoneRequired: 2
-  applesRequired: 2
+  woodRequired: 7
+  stoneRequired: 7
+  applesRequired: 7
 --- !u!114 &653283780 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8668751278085743664, guid: 169d67ea1b758e942b971d31f0039880,

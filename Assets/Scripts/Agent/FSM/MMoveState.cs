@@ -1,12 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-public class MoveState : AgentState
+/// <summary>
+/// To keep similarities with the RL-FSM system, we use a MoveState for the non-RL FSM architecture.
+/// Typically, since movement can be easily generalized, this logic is defined on the base subject,
+/// and only action-specific states are used.
+/// </summary>
+public class MMoveState : ManualState
 {
     private Vector3 _lastPosition = Vector3.zero;
     public override bool IsFinished { get; protected set; }
 
-    public MoveState(BasicAgent owner)
+    public MMoveState(ManualAgent owner)
         : base(owner) { }
 
     public override void DoAction()
@@ -14,24 +19,22 @@ public class MoveState : AgentState
         return;
     }
 
-    public override void DoAction(float[] vectorAction)
+    public override void DoAction(float[] input)
     {
         var rBody = Owner.GetComponent<Rigidbody>();
         var scale = Owner.gameObject.transform.localScale.x;
 
         if (rBody is object)
         {
-            Vector3 controlSignal = Vector3.zero;
-            controlSignal.x = vectorAction[0];
-            controlSignal.z = vectorAction[1];
+            Vector3 direction = Vector3.zero;
+            direction.x = input[0];
+            direction.z = input[1];
 
-            rBody.AddForce(new Vector3(controlSignal.x * Owner.acceleration * scale, 0, controlSignal.z * Owner.acceleration * scale));
+            rBody.AddForce(new Vector3(direction.x * Owner.acceleration * scale, 0, direction.z * Owner.acceleration * scale));
         }
 
         SetDirection();
         _lastPosition = Owner.transform.position;
-
-        IsFinished = true;
     }
 
     public override void OnEnter()
@@ -46,7 +49,17 @@ public class MoveState : AgentState
 
     public override void OnFixedUpdate()
     {
-        return;
+        float[] movement = BasicPathfinder.GetDirection(Owner.Body.transform.localPosition, Owner.GetDestination());
+
+        if (!(movement[0] == 0 && movement[1] == 0))
+        {
+            IsFinished = false;
+            DoAction(movement);
+        }
+        else
+        {
+            IsFinished = true;
+        }
     }
 
     public override void OnUpdate()
@@ -54,7 +67,7 @@ public class MoveState : AgentState
         return;
     }
 
-    public override void SetAction(Action action)
+    public override void SetAction(Action action, float duration = 0f)
     {
         return;
     }

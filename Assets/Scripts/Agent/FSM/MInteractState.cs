@@ -1,17 +1,20 @@
 ﻿using System;
 
-public class InteractState : AgentState
+public class MInteractState : ManualState
 {
     private Action actionToExecute;
     private float counter = 0f;
+    private float actionDuration = 0f;
 
     public override bool IsFinished { get; protected set; }
 
-    public InteractState(BasicAgent owner)
+    public MInteractState(ManualAgent owner)
         : base(owner) { }
 
-    public override void SetAction(Action action)
+    public override void SetAction(Action action, float duration = 0f)
     {
+        actionDuration = duration;
+        counter = 0f;
         actionToExecute = action;
     }
 
@@ -28,8 +31,6 @@ public class InteractState : AgentState
     public override void OnEnter()
     {
         IsFinished = false;
-        counter = Owner.StepCount;
-        // todo : start animation
     }
 
     public override void OnExit()
@@ -39,12 +40,14 @@ public class InteractState : AgentState
 
     public override void OnFixedUpdate()
     {
-        if (Owner.StepCount - counter >= 50)
+        if (!IsFinished && counter >= actionDuration)
         {
             actionToExecute();
             IsFinished = true;
             Owner.CurrentState = AgentStateType.Idle;
-        };
+        }
+
+        counter++;
     }
 
     public override void OnUpdate()

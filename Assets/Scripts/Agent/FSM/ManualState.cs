@@ -1,15 +1,14 @@
 ﻿using System;
 
 /// <summary>
-/// Holds functions related to the agent's FSM. This system is used in conjunction with the RL model.
-/// The FSM is not actually used for the agent's AI, it's only used for executing basic logic and animations.
-/// States are transitioned based on the external triggers or the model's output.
+/// Represents a State for the manual FSM architecture.
+/// These states do not use any ML.
 /// </summary>
-public abstract class AgentState
+public abstract class ManualState
 {
-    protected BasicAgent Owner { get; set; }
+    protected ManualAgent Owner { get; set; }
 
-    public AgentState(BasicAgent owner)
+    public ManualState(ManualAgent owner)
     {
         Owner = owner;
     }
@@ -33,14 +32,14 @@ public abstract class AgentState
     /// <summary>
     /// Runs once when leaving the state.
     /// </summary>
-    public abstract void OnExit();
+    public abstract void OnExit();    
     /// <summary>
     /// The SetAction allows the state logic to be abstract. The concrete subject's class can
     /// provide the action logic to be executed during the updates.
     /// </summary>
     /// <param name="action">The action to be executed during updates.</param>
     /// <param name="duration">The duration to perform the action.</param>
-    public abstract void SetAction(Action action);
+    public abstract void SetAction(Action action, float duration = 0f);
     public abstract void DoAction();
-    public abstract void DoAction(float[] vectorActions);
+    public abstract void DoAction(float[] input);
 }

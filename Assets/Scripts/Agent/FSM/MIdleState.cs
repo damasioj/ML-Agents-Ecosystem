@@ -1,14 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-public class IdleState : AgentState
+public class MIdleState : ManualState
 {
     public override bool IsFinished { get; protected set; } = true;
 
-    public IdleState(BasicAgent owner)
+    public MIdleState(ManualAgent owner)
         : base(owner) { }
 
-    public override void SetAction(Action action)
+    public override void SetAction(Action action, float duration = 0f)
     {
         return;
     }

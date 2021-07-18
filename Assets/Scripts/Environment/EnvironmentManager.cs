@@ -14,16 +14,33 @@ public class EnvironmentManager : MonoBehaviour
     private List<BaseSource> Sources { get; set; }
     private List<BaseStructure> Structures { get; set; }
     private List<BasicAgent> Agents { get; set; }
+    private List<ManualAgent> ManualAgents { get; set; }
     #endregion
 
     void Awake()
     {
         Agents = GetComponentsInChildren<BasicAgent>().ToList();
+        ManualAgents = GetComponentsInChildren<ManualAgent>().ToList();
         Targets = GetComponentsInChildren<BaseTarget>().ToList();
         Sources = GetComponentsInChildren<BaseSource>().ToList();
         Structures = GetComponentsInChildren<BaseStructure>().ToList();
-        
+    }
+
+    void Start()
+    {
         foreach (var agent in Agents)
+        {
+            agent.TaskDone += OnTaskDone;
+
+            if (agent is IHasGoal agentWithGoal)
+            {
+                agentWithGoal.UpdateGoal(GetPendingStructures());
+            }
+
+            agent.UpdateTarget(Targets);
+        }
+
+        foreach (var agent in ManualAgents)
         {
             agent.TaskDone += OnTaskDone;
 
@@ -51,14 +68,39 @@ public class EnvironmentManager : MonoBehaviour
     /// <param name="e"></param>
     private void OnTaskDone(object sender, EventArgs e)
     {
-        if (sender is BasicAgent callingAgent)
+        if (sender is BasicAgent basicAgent)
         {
-            callingAgent.UpdateTarget(Targets);
+            UpdateTargetAndGoal(basicAgent);
+        } 
+        else if (sender is ManualAgent manualAgent)
+        {
+            UpdateTargetAndGoal(manualAgent);
+        }
+    }
 
-            if (callingAgent is IHasGoal agentWithGoal)
-            {
-                agentWithGoal.UpdateGoal(GetPendingStructures());
-            }
+    /// <summary>
+    /// Update target and goal for RL agents.
+    /// </summary>
+    private void UpdateTargetAndGoal(BasicAgent agent)
+    {
+        agent.UpdateTarget(Targets);
+
+        if (agent is IHasGoal agentWithGoal)
+        {
+            agentWithGoal.UpdateGoal(GetPendingStructures());
+        }
+    }
+
+    /// <summary>
+    /// Update target and goal for manually programmed agents.
+    /// </summary>
+    private void UpdateTargetAndGoal(ManualAgent agent)
+    {
+        agent.UpdateTarget(Targets);
+
+        if (agent is IHasGoal agentWithGoal)
+        {
+            agentWithGoal.UpdateGoal(GetPendingStructures());
         }
     }
 }

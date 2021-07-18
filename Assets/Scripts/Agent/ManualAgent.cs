@@ -1,15 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.MLAgents;
 using UnityEngine;
-using UnityEngine.Events;
 
-/// <summary>
-/// An extended abstract class based on the Unity.MLAgents.Agent class that provides basic core functions.
-/// Parent class for all agents within this project.
-/// </summary>
-public abstract class BasicAgent : Agent
+public abstract class ManualAgent : MonoBehaviour
 {
     public event EventHandler TaskDone;
 
@@ -19,9 +13,9 @@ public abstract class BasicAgent : Agent
     #region Properties
     public virtual BaseTarget Target { get; set; }
     public Rigidbody Body { get; protected set; }
-    public int InternalStepCount { get; protected set; }    
+    public int InternalStepCount { get; protected set; }
     protected bool IsDoneCalled { get; set; }
-    protected Dictionary<AgentStateType, AgentState> StateDictionary { get; set; }
+    protected Dictionary<AgentStateType, ManualState> StateDictionary { get; set; }
     private Vector3 PreviousPosition { get; set; }
     private Vector3 StartPosition { get; set; }
 
@@ -34,56 +28,57 @@ public abstract class BasicAgent : Agent
         }
         set
         {
-            if (value != currentState)
-            {
-                StateDictionary[currentState].OnExit();
-                currentState = value;
-                StateDictionary[currentState].OnEnter();
-            }
+            StateDictionary[currentState].OnExit();
+            currentState = value;
+            StateDictionary[currentState].OnEnter();
         }
     }
     #endregion
 
-    public override void Initialize()
+    void Awake()
     {
         Body = GetComponent<Rigidbody>();
-        CurrentState = AgentStateType.Idle;
         StartPosition = transform.position;
         PreviousPosition = StartPosition;
         AssignStateDictionary();
         InternalStepCount = 0;
         IsDoneCalled = false;
         OnTaskDone(); // force update of target and goal
+        transform.position = StartPosition;
+        PreviousPosition = StartPosition;
+        CurrentState = AgentStateType.Idle;
+    }
+
+    void Start()
+    {
+        OnStart();
     }
 
     void Update()
     {
-        StateDictionary[CurrentState].OnUpdate();
-
-        if (maxInternalSteps > 0 && StepCount - InternalStepCount > maxInternalSteps && !IsDoneCalled)
-        {
-            IsDoneCalled = true;
-            SubtractReward(0.1f);
-            Debug.Log($"Reward: {GetCumulativeReward()}");
-            Debug.Log($"No point earned in last {maxInternalSteps} steps. Restarting ...");
-            EndEpisode();
-        }
+        OnUpdate();
     }
 
     void FixedUpdate()
     {
-        StateDictionary[CurrentState].OnFixedUpdate();
+        InternalStepCount++;
+        OnFixedUpdate();
     }
+
+    // this is used to replace constructor overloading
+    protected abstract void OnStart();
+    protected abstract void OnUpdate();
+    protected abstract void OnFixedUpdate();
 
     /// <summary>
     /// The states that the agent has.
     /// </summary>
     protected virtual void AssignStateDictionary()
     {
-        StateDictionary = new Dictionary<AgentStateType, AgentState>()
+        StateDictionary = new Dictionary<AgentStateType, ManualState>()
         {
-            [AgentStateType.Idle] = new IdleState(this),
-            [AgentStateType.Move] = new MoveState(this)
+            [AgentStateType.Idle] = new MIdleState(this),
+            [AgentStateType.Move] = new MMoveState(this)
         };
     }
 
@@ -95,21 +90,10 @@ public abstract class BasicAgent : Agent
         TaskDone?.Invoke(this, EventArgs.Empty);
     }
 
-    public override void OnEpisodeBegin()
-    {
-        SetReward(0f);
-        IsDoneCalled = false;
-        InternalStepCount = 0;
-        Body.angularVelocity = Vector3.zero;
-        Body.velocity = Vector3.zero;
-        transform.position = StartPosition;
-        PreviousPosition = StartPosition;
-    }
-
-    protected virtual void Move(float[] vectorAction)
+    protected virtual void Move(float[] input)
     {
         // agent is idle
-        if (vectorAction[0] == 0 && vectorAction[1] == 0)
+        if (input[0] == 0 && input[1] == 0)
         {
             CurrentState = AgentStateType.Idle;
             return;
@@ -117,7 +101,7 @@ public abstract class BasicAgent : Agent
 
         // agent is moving
         CurrentState = AgentStateType.Move;
-        StateDictionary[CurrentState].DoAction(vectorAction);
+        StateDictionary[CurrentState].DoAction(input);
     }
 
     protected virtual void SetDirection()
@@ -132,17 +116,12 @@ public abstract class BasicAgent : Agent
         }
     }
 
-    
-
-    public override void Heuristic(float[] actions)
+    /// <summary>
+    /// Gets the current destination of the agent.
+    /// </summary>
+    public virtual Vector3 GetDestination()
     {
-        actions[0] = Input.GetAxis("Horizontal");
-        actions[1] = Input.GetAxis("Vertical");
-    }
-
-    protected void SubtractReward(float value)
-    {
-        AddReward(value * -1);
+        return Target.Location;
     }
 
     /// <summary>
@@ -150,4 +129,5 @@ public abstract class BasicAgent : Agent
     /// </summary>
     /// <param name="baseTargets">Targets</param>
     public abstract void UpdateTarget(IEnumerable<BaseTarget> baseTargets);
+    
 }
