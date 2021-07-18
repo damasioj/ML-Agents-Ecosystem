@@ -36,9 +36,9 @@ public abstract class BasicAgent : Agent
         {
             if (value != currentState)
             {
-                StateDictionary[currentState].OnExit();
+                StateDictionary[currentState].OnExit(this);
                 currentState = value;
-                StateDictionary[currentState].OnEnter();
+                StateDictionary[currentState].OnEnter(this);
             }
         }
     }
@@ -58,7 +58,7 @@ public abstract class BasicAgent : Agent
 
     void Update()
     {
-        StateDictionary[CurrentState].OnUpdate();
+        StateDictionary[CurrentState].OnUpdate(this);
 
         if (maxInternalSteps > 0 && StepCount - InternalStepCount > maxInternalSteps && !IsDoneCalled)
         {
@@ -72,7 +72,7 @@ public abstract class BasicAgent : Agent
 
     void FixedUpdate()
     {
-        StateDictionary[CurrentState].OnFixedUpdate();
+        StateDictionary[CurrentState].OnFixedUpdate(this);
     }
 
     /// <summary>
@@ -82,8 +82,8 @@ public abstract class BasicAgent : Agent
     {
         StateDictionary = new Dictionary<AgentStateType, AgentState>()
         {
-            [AgentStateType.Idle] = new IdleState(this),
-            [AgentStateType.Move] = new MoveState(this)
+            [AgentStateType.Idle] = new IdleState(),
+            [AgentStateType.Move] = new MoveState()
         };
     }
 
@@ -117,7 +117,7 @@ public abstract class BasicAgent : Agent
 
         // agent is moving
         CurrentState = AgentStateType.Move;
-        StateDictionary[CurrentState].DoAction(vectorAction);
+        StateDictionary[CurrentState].DoAction(this, vectorAction);
     }
 
     protected virtual void SetDirection()

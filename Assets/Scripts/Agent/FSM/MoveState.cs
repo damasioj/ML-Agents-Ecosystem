@@ -6,18 +6,23 @@ public class MoveState : AgentState
     private Vector3 _lastPosition = Vector3.zero;
     public override bool IsFinished { get; protected set; }
 
-    public MoveState(BasicAgent owner)
-        : base(owner) { }
-
-    public override void DoAction()
+    public override void DoAction(BasicAgent owner)
     {
         return;
     }
 
-    public override void DoAction(float[] vectorAction)
+    public override void DoAction(BasicAgent owner, float[] vectorAction)
     {
-        var rBody = Owner.GetComponent<Rigidbody>();
-        var scale = Owner.gameObject.transform.localScale.x;
+        var rBody = owner.GetComponent<Rigidbody>();
+        var scale = owner.gameObject.transform.localScale.x;
+
+        //rBody.angularVelocity = Vector3.zero;
+        //rBody.velocity = Vector3.zero;
+        //if (animator.GetInteger("AnimIndex") != 0)
+        //{
+        //    animator.SetInteger("AnimIndex", 0);
+        //    animator.SetTrigger("Next");
+        //}
 
         if (rBody is object)
         {
@@ -25,31 +30,31 @@ public class MoveState : AgentState
             controlSignal.x = vectorAction[0];
             controlSignal.z = vectorAction[1];
 
-            rBody.AddForce(new Vector3(controlSignal.x * Owner.acceleration * scale, 0, controlSignal.z * Owner.acceleration * scale));
+            rBody.AddForce(new Vector3(controlSignal.x * owner.acceleration * scale, 0, controlSignal.z * owner.acceleration * scale));
         }
 
-        SetDirection();
-        _lastPosition = Owner.transform.position;
+        SetDirection(owner);
+        _lastPosition = owner.transform.position;
 
         IsFinished = true;
     }
 
-    public override void OnEnter()
+    public override void OnEnter(BasicAgent owner)
     {
         IsFinished = false;
     }
 
-    public override void OnExit()
+    public override void OnExit(BasicAgent owner)
     {
         return;
     }
 
-    public override void OnFixedUpdate()
+    public override void OnFixedUpdate(BasicAgent owner)
     {
         return;
     }
 
-    public override void OnUpdate()
+    public override void OnUpdate(BasicAgent owner)
     {
         return;
     }
@@ -59,13 +64,13 @@ public class MoveState : AgentState
         return;
     }
 
-    private void SetDirection()
+    private void SetDirection(BasicAgent owner)
     {
-        var direction = (Owner.transform.position - _lastPosition).normalized;
+        var direction = (owner.transform.position - _lastPosition).normalized;
 
-        if (Owner.transform.rotation != Quaternion.LookRotation(direction))
+        if (owner.transform.rotation != Quaternion.LookRotation(direction))
         {
-            Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, Quaternion.LookRotation(direction), 0.08F);
+            owner.transform.rotation = Quaternion.Slerp(owner.transform.rotation, Quaternion.LookRotation(direction), 0.08F);
         }
     }
 }

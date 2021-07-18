@@ -23,9 +23,9 @@ public class CollectorAgent : BasicAgent, IHasGoal
     {
         StateDictionary = new Dictionary<AgentStateType, AgentState>()
         {
-            [AgentStateType.Idle] = new IdleState(this),
-            [AgentStateType.Move] = new MoveState(this),
-            [AgentStateType.Interact] = new InteractState(this)
+            [AgentStateType.Idle] = new IdleState(),
+            [AgentStateType.Move] = new MoveState(),
+            [AgentStateType.Interact] = new InteractState()
         };
     }
 

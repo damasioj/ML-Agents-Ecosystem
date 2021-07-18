@@ -5,28 +5,25 @@ public class IdleState : AgentState
 {
     public override bool IsFinished { get; protected set; } = true;
 
-    public IdleState(BasicAgent owner)
-        : base(owner) { }
-
     public override void SetAction(Action action)
     {
         return;
     }
 
-    public override void DoAction()
+    public override void DoAction(BasicAgent owner)
     {
         return;
     }
 
-    public override void DoAction(float[] vectorActions)
+    public override void DoAction(BasicAgent owner, float[] vectorActions)
     {
         return;
     }
 
-    public override void OnEnter()
+    public override void OnEnter(BasicAgent owner)
     {
         IsFinished = false;
-        var rBody = Owner.GetComponent<Rigidbody>();
+        var rBody = owner.GetComponent<Rigidbody>();
         if (rBody is object)
         {
             rBody.angularVelocity = Vector3.zero;
@@ -35,17 +32,17 @@ public class IdleState : AgentState
         IsFinished = true;
     }
 
-    public override void OnExit()
+    public override void OnExit(BasicAgent owner)
     {
         return;
     }
 
-    public override void OnFixedUpdate()
+    public override void OnFixedUpdate(BasicAgent owner)
     {
         return;
     }
 
-    public override void OnUpdate()
+    public override void OnUpdate(BasicAgent owner)
     {
         return;
     }

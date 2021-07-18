@@ -7,47 +7,44 @@ public class InteractState : AgentState
 
     public override bool IsFinished { get; protected set; }
 
-    public InteractState(BasicAgent owner)
-        : base(owner) { }
-
     public override void SetAction(Action action)
     {
         actionToExecute = action;
     }
 
-    public override void DoAction()
+    public override void DoAction(BasicAgent owner)
     {
         return;
     }
 
-    public override void DoAction(float[] vectorActions)
+    public override void DoAction(BasicAgent owner, float[] vectorActions)
     {
         return;
     }
 
-    public override void OnEnter()
+    public override void OnEnter(BasicAgent owner)
     {
         IsFinished = false;
-        counter = Owner.StepCount;
+        counter = owner.StepCount;
         // todo : start animation
     }
 
-    public override void OnExit()
+    public override void OnExit(BasicAgent owner)
     {
         return;
     }
 
-    public override void OnFixedUpdate()
+    public override void OnFixedUpdate(BasicAgent owner)
     {
-        if (Owner.StepCount - counter >= 50)
+        if (owner.StepCount - counter >= 50)
         {
             actionToExecute();
             IsFinished = true;
-            Owner.CurrentState = AgentStateType.Idle;
+            owner.CurrentState = AgentStateType.Idle;
         };
     }
 
-    public override void OnUpdate()
+    public override void OnUpdate(BasicAgent owner)
     {
         return;
     }
